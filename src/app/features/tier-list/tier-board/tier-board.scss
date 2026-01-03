@@ -1,0 +1,83 @@
+.tier-board {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.tier-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.tier-label-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  min-width: 60px;
+  font-weight: bold;
+  color: var(--tier-label-text);
+  border-radius: 4px;
+}
+
+.tier-label {
+  width: 100%;
+  height: 100%;
+  min-height: 40px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: var(--tier-content-text);
+  font-size: 1.2rem;
+  font-weight: bold;
+  resize: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.unassigned-row {
+  margin-top: 20px;
+}
+
+.tier-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex: 1;
+  min-height: 220px;
+  border-radius: 8px;
+  padding: 5px;
+
+  background: var(--bg-tier);
+  border: 1px solid var(--border-color);
+}
+
+.tier-actions {
+  width: 60px;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tier-actions button {
+  border: none;
+  background: var(--tier-actions-bg);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px;
+}
+
+.tier-actions button:hover {
+  background: var(--tier-actions-hover);
+}
+
+.tier-actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

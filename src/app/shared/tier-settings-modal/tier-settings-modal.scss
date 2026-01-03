@@ -1,0 +1,58 @@
+/* Fond overlay semi-transparent, adapté au mode sombre */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg, rgba(0,0,0,0.5));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--bg-modal, #fff);
+  border-radius: 12px;
+  padding: 20px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-main, #222);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.color-palette span {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color, #aaa);
+  cursor: pointer;
+  display: inline-block;
+}
+
+.color-palette span.selected {
+  border: 2px solid var(--highlight-color, #000);
+}
+
+.modal button {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background: var(--btn-hover);
+}

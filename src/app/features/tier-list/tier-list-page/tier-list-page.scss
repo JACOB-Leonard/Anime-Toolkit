@@ -1,0 +1,52 @@
+.page-container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+.theme-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.theme-toggle {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--btn-hover);
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+
+.loading {
+  color: var(--highlight-color);
+}
+
+.no-results {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Assure que le tier board prend tout l'espace restant */
+.tier-board-container {
+  flex: 1;
+}

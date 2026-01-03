@@ -1,0 +1,23 @@
+<div class="page-container">
+
+  <div class="theme-toggle-container">
+    <button class="theme-toggle" (click)="theme.toggleDark()">
+      {{ theme.isDark() ? '☀️ Mode Clair' : '🌙 Mode Sombre' }}
+    </button>
+  </div>
+
+  <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
+
+  <div class="status">
+    <p>Pages chargées : {{ currentPage }} / {{ totalPages }}</p>
+    <p *ngIf="loading" class="loading">🔄 Chargement des résultats…</p>
+    <p *ngIf="!loading && noResults" class="no-results">😕 Aucun anime trouvé pour cette recherche.</p>
+  </div>
+
+  <app-tier-board
+    [tierList]="tierListService.getTierList()"
+    [unassigned]="animes"
+    class="tier-board-container">
+  </app-tier-board>
+
+</div>

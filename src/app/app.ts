@@ -1,12 +1,18 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { TierListPage } from './features/tier-list/tier-list-page/tier-list-page';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [TierListPage],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss'],
+  standalone: true,
 })
 export class App {
-  protected readonly title = signal('anime-toolkit');
+  constructor(public theme: ThemeService) {}
+
+  ngOnInit() {
+    this.theme.initTheme();
+  }
 }

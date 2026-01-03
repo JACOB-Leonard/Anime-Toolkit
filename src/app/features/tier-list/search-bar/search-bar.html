@@ -1,0 +1,43 @@
+<form class="search-bar" (ngSubmit)="onSubmit()">
+  <div class="search-main">
+    <!-- Saison -->
+    <div class="field">
+      <label>Saison</label>
+      <select [(ngModel)]="season" name="season">
+        <option value="winter">❄️ Winter</option>
+        <option value="spring">🌸 Spring</option>
+        <option value="summer">☀️ Summer</option>
+        <option value="fall">🍂 Fall</option>
+      </select>
+    </div>
+
+    <!-- Année -->
+    <div class="field">
+      <label>Année</label>
+      <input
+        type="number"
+        [(ngModel)]="year"
+        name="year"
+        min="1900"
+        max="2100"
+      />
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters">
+      <label *ngFor="let type of animeTypes" class="filter-chip">
+        <input
+          type="checkbox"
+          [(ngModel)]="type.checked"
+          name="filter-{{ type.value }}"
+        />
+        <span>{{ type.label }}</span>
+      </label>
+    </div>
+
+    <!-- Bouton -->
+    <button type="submit" class="search-btn">
+      🔍 Rechercher
+    </button>
+  </div>
+</form>

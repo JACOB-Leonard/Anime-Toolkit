@@ -1,0 +1,27 @@
+<div class="overlay" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>Paramètres du tier "{{ label }}"</h3>
+
+    <button (click)="addAbove.emit()">➕ Ajouter au-dessus</button>
+    <button (click)="addBelow.emit()">➕ Ajouter en-dessous</button>
+
+    <h4>Personnaliser la couleur</h4>
+    <div class="color-palette">
+      <span
+        *ngFor="let c of presetColors"
+        [style.background]="c"
+        [class.selected]="c === color"
+        (click)="colorChange.emit(c)"
+      ></span>
+    </div>
+
+    <button (click)="clearTier.emit()">🧹 Vider ce tier</button>
+    <hr />
+
+    <button (click)="deleteTier.emit()">🗑 Supprimer</button>
+
+    <div class="actions">
+      <button (click)="close.emit()">Fermer</button>
+    </div>
+  </div>
+</div>
