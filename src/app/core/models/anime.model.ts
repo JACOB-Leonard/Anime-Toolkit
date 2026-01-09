@@ -40,4 +40,6 @@ export interface Anime {
   explicit_genres: { mal_id: number; type: string; name: string; url: string }[];
   themes: { mal_id: number; type: string; name: string; url: string }[];
   demographics: { mal_id: number; type: string; name: string; url: string }[];
+
+  selectedImage?: string;
 }

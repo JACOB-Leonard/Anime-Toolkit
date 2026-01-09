@@ -1,3 +1,15 @@
-<div class="anime-card">
-  <img class="image" [src]="anime.images.jpg.image_url" alt="{{ anime.title }}" />
+<div class="anime-card" cdkDrag>
+  <img class="cover" [src]="currentImage" alt="{{ anime.title }}" />
+
+  <div class="corner-btn-container">
+    <button class="image-picker-btn" (click)="togglePicker($event)">
+      🖼️
+    </button>
+  </div>
+</div>
+
+<div class="image-picker-overlay" *ngIf="showPicker" (click)="togglePicker($event)">
+  <div class="image-picker-modal" (click)="$event.stopPropagation()">
+    <img *ngFor="let img of pictures" [src]="img" (click)="selectImage(img)" />
+  </div>
 </div>
