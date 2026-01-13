@@ -17,7 +17,7 @@ Interactive anime tier list built with Angular and Jikan API.
 - SCSS + CSS variables
 
 ## 🚀 Live Demo
-👉 https://TON_USER.github.io/anime-tier-list/
+👉 https://jacob-leonard.github.io/Anime-Toolkit/
 
 ## 📦 Installation
 ```bash

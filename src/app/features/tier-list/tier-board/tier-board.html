@@ -9,7 +9,8 @@
     [cdkDropListData]="tierList[tier]"
     [cdkDropListConnectedTo]="dropListIds"
     [id]="'tier-' + tier"
-    (cdkDropListDropped)="onDrop($event, tier)"
+    (cdkDropListDropped)="onDrop($event)"
+    cdkDropListSortingDisabled="false"
   >
     <div *ngFor="let anime of tierList[tier]" cdkDrag>
       <app-anime-card [anime]="anime"></app-anime-card>
@@ -29,17 +30,27 @@
   </div>
 </div>
 
-<div class="tier-row unassigned-row">
-  <div
-    class="tier-content"
-    cdkDropList
-    id="unassigned"
-    [cdkDropListData]="unassigned"
-    [cdkDropListConnectedTo]="dropListIds"
-    (cdkDropListDropped)="onDrop($event, 'unassigned')"
-  >
-    <div *ngFor="let anime of unassigned" cdkDrag>
-      <app-anime-card [anime]="anime"></app-anime-card>
+<div class="unassigned-container">
+  <div *ngFor="let type of nonEmptyUnassignedTypes">
+    <div class="tier-row unassigned-row">
+      <div class="tier-header" (click)="toggleType(type)">
+        {{ type }} ({{ unassignedTypes[type].length }})
+        <span>{{ isCollapsed(type) ? '▶' : '▼' }}</span>
+      </div>
+
+      <div
+        *ngIf="!isCollapsed(type)"
+        class="tier-content"
+        cdkDropList
+        [id]="'unassigned-' + type"
+        [cdkDropListData]="unassignedTypes[type]"
+        [cdkDropListConnectedTo]="dropListIds.concat(connectedUnassignedIds)"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        <div *ngFor="let anime of unassignedTypes[type]" cdkDrag>
+          <app-anime-card [anime]="anime"></app-anime-card>
+        </div>
+      </div>
     </div>
   </div>
 </div>

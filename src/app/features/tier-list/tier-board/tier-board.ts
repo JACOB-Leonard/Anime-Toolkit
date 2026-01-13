@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { TierSettingsModal } from '../../../shared/tier-settings-modal/tier-settings-modal';
+import { Anime } from '../../../core/models/anime.model';
 
 
 @Component({
@@ -22,15 +23,27 @@ export class TierBoard {
   tierColors: Record<string, string> = {};
   tierCustomColors: Record<string, string | null> = {};
 
-  @Input() unassigned: any[] = [];
+  @Input() unassignedTypes: Record<string, Anime[]> = {};
+
+  readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'Special', 'Music'];
 
   get tierNames(): string[] {
     return this.tierOrder;
   }
 
-
   get dropListIds(): string[] {
-    return ['unassigned', ...this.tierOrder.map(t => 'tier-' + t)];
+    return [
+      ...this.unassignedTypeKeys.map(t => `unassigned-${t}`),
+      ...this.tierNames.map(t => 'tier-' + t)
+    ];
+  }
+
+  get nonEmptyUnassignedTypes() {
+    return this.typeOrder.filter(type => this.unassignedTypes[type]?.length);
+  }
+
+  get connectedUnassignedIds(): string[] {
+    return this.nonEmptyUnassignedTypes.map(type => 'unassigned-' + type);
   }
 
   moveTierUp(index: number) {
@@ -53,18 +66,37 @@ export class TierBoard {
     });
   }
 
-  onDrop(event: CdkDragDrop<any[]>, tier: string) {
-    const previous = event.previousContainer.data;
-    const current = event.container.data;
+  onDrop(event: CdkDragDrop<Anime[]>) {
+    const prev = event.previousContainer;
+    const curr = event.container;
 
-    if (!previous || !current) return;
+    if (!prev || !curr) return;
 
-    if (event.previousContainer === event.container) {
-      moveItemInArray(current, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(previous, current, event.previousIndex, event.currentIndex);
+    if (prev === curr) {
+      moveItemInArray(curr.data, event.previousIndex, event.currentIndex);
+      return;
+    }
+
+    const anime = prev.data[event.previousIndex];
+
+    prev.data.splice(event.previousIndex, 1);
+
+    if (curr.id.startsWith('tier-')) {
+      curr.data.splice(event.currentIndex, 0, anime);
+      return;
+    }
+
+    if (curr.id.startsWith('unassigned-')) {
+      const type = anime.type || 'Other';
+
+      if (!this.unassignedTypes[type]) {
+        this.unassignedTypes[type] = [];
+      }
+
+      this.unassignedTypes[type].splice(event.currentIndex, 0, anime);
     }
   }
+
 
   //Modal management
 
@@ -104,13 +136,25 @@ export class TierBoard {
     this.initializeTier(newTier);
   }
 
+  private returnToUnassigned(animes: Anime[]) {
+    for (const anime of animes) {
+      const type = anime.type || 'Other';
+
+      if (!this.unassignedTypes[type]) {
+        this.unassignedTypes[type] = [];
+      }
+
+      this.unassignedTypes[type].push(anime);
+    }
+  }
+
   removeTier(index: number) {
     const tier = this.tierOrder[index];
     if (!tier) return;
 
     const items = this.tierList[tier] ?? [];
 
-    this.unassigned.push(...items);
+    this.returnToUnassigned(items);
 
     this.tierOrder.splice(index, 1);
     delete this.tierList[tier];
@@ -121,14 +165,16 @@ export class TierBoard {
     this.closeSettings();
   }
 
+
   clearTier(tier: string) {
     const items = this.tierList[tier];
     if (!items || items.length === 0) return;
 
-    this.unassigned.push(...items);
+    this.returnToUnassigned(items);
 
     this.tierList[tier] = [];
   }
+
 
   // Color
 
@@ -153,6 +199,26 @@ export class TierBoard {
   updateTierColor(color: string) {
     if (!this.selectedTier) return;
     this.tierCustomColors[this.selectedTier] = color;
+  }
+
+  // Collapsed Types
+
+  get unassignedTypeKeys(): string[] {
+    return Object.keys(this.unassignedTypes);
+  }
+
+  collapsedTypes = new Set<string>();
+
+  toggleType(type: string) {
+    if (this.collapsedTypes.has(type)) {
+      this.collapsedTypes.delete(type);
+    } else {
+      this.collapsedTypes.add(type);
+    }
+  }
+
+  isCollapsed(type: string): boolean {
+    return this.collapsedTypes.has(type);
   }
 
 }
