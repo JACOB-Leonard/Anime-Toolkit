@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 
 bootstrapApplication(App, {
   providers: [
-    provideHttpClient(withFetch()), // HttpClient avec Fetch API
+    provideHttpClient(withFetch()),
 
     importProvidersFrom(
       CommonModule,

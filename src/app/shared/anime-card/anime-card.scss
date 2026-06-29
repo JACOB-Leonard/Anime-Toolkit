@@ -1,6 +1,7 @@
 .anime-card {
   position: relative;
   overflow: hidden;
+  height: 200px;
 
   &:hover .corner-btn-container {
     opacity: 1;
@@ -34,41 +35,236 @@
   cursor: pointer;
 }
 
-.image-picker-overlay {
+.cover {
+  max-height: 200px;
+}
+
+.overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.image-picker-modal {
-  background: transparent;
-  padding: 0;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  justify-content: center;
+.modal {
+  background: var(--bg-modal);
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+  padding: 20px;
+
+  width: 90vw;
+  height: 50vh;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  overflow: hidden;
+
+  align-items: stretch;
 }
 
-.image-picker-modal img {
-  max-width: 200px;
-  max-height: 200px;
-  object-fit: cover;
+.left,
+.center,
+.right {
+  min-height: 0;
+  height: 100%;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  min-height: 0;
+  height: 100%;
+}
+
+.main-image-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.main-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s;
 }
 
-.image-picker-modal img:hover {
+.main-image:hover {
+  transform: scale(1.03);
+}
+
+.thumbnails {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0; // Empêche les thumbnails d'être compressés
+}
+
+.thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.thumbnails img:hover {
   transform: scale(1.05);
 }
 
-.cover {
-  max-height: 200px;
+.thumbnails img.active {
+  opacity: 1;
+  border: 2px solid white;
+}
+
+.center {
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.center h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.center h3 {
+  margin-top: 6px;
+  margin-bottom: 16px;
+
+  font-size: 1.1rem;
+  font-weight: 400;
+
+  opacity: 0.7;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta-badge {
+  background: var(--meta-bg);
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+.meta-badge.airing {
+  background: #2e7d32;
+}
+
+.meta-date {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.synopsis {
+  line-height: 1.7;
+  opacity: 0.92;
+
+  margin-bottom: 24px;
+
+  white-space: pre-wrap;
+}
+
+.tags {
+  margin-bottom: 20px;
+}
+
+.tags h4 {
+  margin-bottom: 10px;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  opacity: 0.9;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  background: var(--tag-bg);
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 0.85rem;
+
+  transition: background 0.2s;
+}
+
+.tag:hover {
+  background: var(--tag-hover);;
+}
+
+.tag.studio {
+  background: rgba(100, 149, 237, 0.18);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  display: flex;
+  align-items: center;
+}
+
+.video-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: none;
+}
+
+@media (max-width: 900px) {
+  .modal {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .right iframe {
+    height: 200px;
+  }
 }

@@ -1,15 +1,140 @@
 <div class="anime-card" cdkDrag>
-  <img class="cover" [src]="currentImage" alt="{{ anime.title }}" />
+  <img class="cover" [src]="currentImage" alt="{{ anime.title }}" cdkDragHandle />
 
   <div class="corner-btn-container">
-    <button class="image-picker-btn" (click)="togglePicker($event)">
+    <button class="image-picker-btn" (click)="toggleModal($event)">
       🖼️
     </button>
   </div>
 </div>
 
-<div class="image-picker-overlay" *ngIf="showPicker" (click)="togglePicker($event)">
-  <div class="image-picker-modal" (click)="$event.stopPropagation()">
-    <img *ngFor="let img of pictures" [src]="img" (click)="selectImage(img)" />
+<div class="overlay" *ngIf="showModal" (click)="showModal = false" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+  <div class="modal" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+
+    <div class="left">
+      <div class="main-image-container">
+        <img
+          class="main-image"
+          [src]="currentImage"
+          (click)="toggleThumbnails()"
+        />
+      </div>
+      <div class="thumbnails">
+        <img
+          *ngFor="let img of pictures"
+          [src]="img"
+          (click)="selectImage(img)"
+          [class.active]="img === currentImage"
+        />
+      </div>
+    </div>
+
+    <div class="center">
+
+      <h2>{{ anime.title }}</h2>
+
+      <h3 *ngIf="anime.title_english">
+        {{ anime.title_english }}
+      </h3>
+
+      <hr />
+
+      <div class="meta">
+
+        <div class="meta-row">
+
+          <span class="meta-badge">
+            {{ anime.type }}
+          </span>
+
+          <span class="meta-badge">
+            {{ anime.source }}
+          </span>
+
+          <span class="meta-badge">
+            {{ anime.episodes }} eps
+          </span>
+
+          <span class="meta-badge">
+            {{ anime.duration }}
+          </span>
+
+        </div>
+
+        <div class="meta-row">
+
+          <span class="meta-badge">
+            {{ anime.season | titlecase }}
+            {{ anime.year }}
+          </span>
+
+          <span
+            class="meta-badge"
+            *ngIf="anime.status">
+            {{ anime.status }}
+          </span>
+
+          <span
+            class="meta-badge airing"
+            *ngIf="anime.airing">
+            Airing
+          </span>
+        </div>
+
+        <div
+          class="meta-row"
+          *ngIf="anime.aired?.['from']">
+
+          <span class="meta-date">
+
+            Aired:
+            {{ anime.aired?.['from'] | date:'mediumDate' }}
+            {{ anime.aired?.['to'] | date:'mediumDate' }}
+          </span>
+        </div>
+      </div>
+
+      <p class="synopsis">
+        {{ anime.synopsis }}
+      </p>
+
+      <div class="tags">
+        <h4>Genres</h4>
+        <div class="tag-list">
+          <span
+            *ngFor="let genre of anime.genres"
+            class="tag">
+            {{ genre.name }}
+          </span>
+          <span
+            *ngFor="let theme of anime.themes"
+            class="tag">
+            {{ theme.name }}
+          </span>
+        </div>
+      </div>
+
+      <div class="tags">
+        <h4>Studios</h4>
+        <div class="tag-list">
+          <span
+            *ngFor="let studio of anime.studios"
+            class="tag studio">
+
+            {{ studio.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right" *ngIf="safeTrailerUrl">
+      <div class="video-wrapper">
+        <iframe
+          [src]="safeTrailerUrl"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
   </div>
 </div>

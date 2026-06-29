@@ -1,34 +1,43 @@
-<div *ngFor="let tier of tierNames; let i = index" class="tier-row">
-  <div class="tier-label-box" [style.background]="getTierColor(tier, i)">
-    <input [(ngModel)]="tierListLabels[tier]" class="tier-label" />
-  </div>
+<div #tierBoard class="tier-board export-area">
+  <div *ngFor="let tier of tierNames; let i = index" class="tier-row">
+    <div class="tier-label-box" [style.background]="getTierColor(tier, i)">
+      <input [(ngModel)]="tierListLabels[tier]" class="tier-label" />
+    </div>
 
-  <div
-    class="tier-content"
-    cdkDropList
-    [cdkDropListData]="tierList[tier]"
-    [cdkDropListConnectedTo]="dropListIds"
-    [id]="'tier-' + tier"
-    (cdkDropListDropped)="onDrop($event)"
-    cdkDropListSortingDisabled="false"
-  >
-    <div *ngFor="let anime of tierList[tier]" cdkDrag>
-      <app-anime-card [anime]="anime"></app-anime-card>
+    <div
+      class="tier-content"
+      cdkDropList
+      [cdkDropListData]="tierList[tier]"
+      [cdkDropListConnectedTo]="dropListIds"
+      [id]="'tier-' + tier"
+      (cdkDropListDropped)="onDrop($event)"
+      cdkDropListSortingDisabled="false"
+    >
+      <div *ngFor="let anime of tierList[tier]" cdkDrag>
+        <app-anime-card [anime]="anime"></app-anime-card>
+      </div>
+    </div>
+
+    <div class="tier-actions no-export">
+      <button (click)="openSettings(tier, i)" title="Paramètres">⚙</button>
+      <button (click)="moveTierUp(i)" [disabled]="i === 0" title="Monter">⬆</button>
+      <button
+        (click)="moveTierDown(i)"
+        [disabled]="i === tierNames.length - 1"
+        title="Descendre"
+      >
+        ⬇
+      </button>
     </div>
   </div>
-
-  <div class="tier-actions">
-    <button (click)="openSettings(tier, i)" title="Paramètres">⚙</button>
-    <button (click)="moveTierUp(i)" [disabled]="i === 0" title="Monter">⬆</button>
-    <button
-      (click)="moveTierDown(i)"
-      [disabled]="i === tierNames.length - 1"
-      title="Descendre"
-    >
-      ⬇
-    </button>
-  </div>
 </div>
+
+<div class="export-bar no-export">
+  <button class="export-btn" (click)="exportAsImage()" *ngIf="serviceAvailable">
+    📸 Télécharger l’image
+  </button>
+</div>
+
 
 <div class="unassigned-container">
   <div *ngFor="let type of nonEmptyUnassignedTypes">

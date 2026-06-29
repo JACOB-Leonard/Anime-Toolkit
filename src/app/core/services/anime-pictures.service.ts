@@ -8,7 +8,7 @@ export class AnimePicturesService {
   constructor(private http: HttpClient) {}
 
   getPictures(animeId: number) {
-    return this.http.get<{ data: { jpg: { image_url: string } }[] }>(
+    return this.http.get<{ data: { jpg: { large_image_url: string } }[] }>(
       `${this.BASE_URL}/anime/${animeId}/pictures`
     );
   }

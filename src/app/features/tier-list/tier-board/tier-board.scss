@@ -1,7 +1,9 @@
+/* ========================
+   TIER BOARD
+======================== */
 .tier-board {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   background: var(--bg-main);
   color: var(--text-main);
 }
@@ -9,7 +11,6 @@
 .tier-row {
   display: flex;
   align-items: stretch;
-  gap: 10px;
 }
 
 .tier-label-box {
@@ -27,92 +28,43 @@
   width: 100%;
   height: 100%;
   min-height: 40px;
-  text-align: center;
+
   border: none;
   background: transparent;
   color: var(--tier-content-text);
+
   font-size: 1.2rem;
   font-weight: bold;
+
   resize: none;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  text-align: center;
+
+  outline: none;
 }
 
-.unassigned-container {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.unassigned-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 12px;
-  background: var(--bg-tier);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.unassigned-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.unassigned-row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.tier-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--tier-actions-bg, #3a3a3a);
-  color: var(--text-main, #eee);
-  padding: 6px 12px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 6px;
-  user-select: none;
-
-  min-width: 120px;
-}
-
+/* ========================
+   TIER CONTENT
+======================== */
 .tier-content {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color, #555);
-  background: var(--bg-tier, #2a2a2a);
+  justify-content: flex-start;
+  align-content: center;
+  gap: 5px;
+  flex: 1;
+  min-height: 200px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tier);
 }
 
 .tier-content > div {
   flex: 0 0 auto;
+  height: 200px;
 }
 
-
-.tier-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  flex: 1;
-  min-height: 220px;
-  border-radius: 8px;
-  padding: 5px;
-
-  background: var(--bg-tier);
-  border: 1px solid var(--border-color);
-}
-
+/* ========================
+   TIER ACTIONS
+======================== */
 .tier-actions {
   width: 60px;
   min-width: 60px;
@@ -138,4 +90,97 @@
 .tier-actions button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* ========================
+   UNASSIGNED ROWS
+======================== */
+.unassigned-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.unassigned-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--tier-actions-bg);
+  color: var(--text-main);
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  user-select: none;
+  min-width: 120px;
+}
+
+/* ========================
+   EXPORT
+======================== */
+.export-area {
+  background: var(--bg-main);
+  padding: 16px;
+}
+
+.export-bar {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+}
+
+.export-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  background: var(--btn-hover);
+}
+
+.export-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================
+   EXPORT ZOOM (pour html-to-image)
+======================== */
+.export-zoom {
+  background: var(--bg-main);
+
+  app-anime-card { 
+    transform: scale(1.5); 
+    transform-origin: top left;
+    width: 150px;
+  }
+
+  width: max-content;
+  display: inline-block;
+  max-width: 1500px;
+  
+}
+
+.export-zoom .tier-content {
+  flex-wrap: wrap;
 }

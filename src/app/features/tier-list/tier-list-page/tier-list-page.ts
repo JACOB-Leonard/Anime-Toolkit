@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnimeService } from '../../../core/services/anime';
-import { TierListService } from '../../../core/services/tier-list';
 import { ThemeService } from '../../../core/services/theme.service';
 import { SearchBar } from '../search-bar/search-bar';
 import { TierBoard } from '../tier-board/tier-board';
@@ -29,11 +28,10 @@ export class TierListPage {
   loading = false;
   noResults = false;
 
-  readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'Special', 'Music'];
+  readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'TV Special', 'Music'];
 
   constructor(
     private animeService: AnimeService,
-    public tierListService: TierListService,
     public theme: ThemeService
   ) {}
 

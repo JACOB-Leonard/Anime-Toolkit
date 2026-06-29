@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AnimeCard } from '../../../shared/anime-card/anime-card';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { TierSettingsModal } from '../../../shared/tier-settings-modal/tier-settings-modal';
 import { Anime } from '../../../core/models/anime.model';
+import * as htmlToImage from 'html-to-image';
 
 
 @Component({
@@ -16,16 +17,28 @@ import { Anime } from '../../../core/models/anime.model';
   imports: [CommonModule, DragDropModule, FormsModule, AnimeCard, TierSettingsModal],
 })
 export class TierBoard {
-  @Input() tierList: Record<string, any[]> = {};
+  tierList: Record<string, any[]> = {
+      S: [],
+      A: [],
+      B: [],
+      C: [],
+      D: [],
+      E: [],
+    };
+  @Input() unassignedTypes: Record<string, Anime[]> = {};
+
   tierListLabels: Record<string, string> = {};
   tierOrder: string[] = [];
 
   tierColors: Record<string, string> = {};
   tierCustomColors: Record<string, string | null> = {};
 
-  @Input() unassignedTypes: Record<string, Anime[]> = {};
+  readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'TV Special', 'Music'];
 
-  readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'Special', 'Music'];
+  @ViewChild('tierBoard', { static: false })
+  tierBoardRef!: ElementRef<HTMLDivElement>;
+
+  serviceAvailable = false;
 
   get tierNames(): string[] {
     return this.tierOrder;
@@ -219,6 +232,37 @@ export class TierBoard {
 
   isCollapsed(type: string): boolean {
     return this.collapsedTypes.has(type);
+  }
+
+  // Export as Image
+
+  exportAsImage() {
+    if (!this.tierBoardRef) return;
+
+    const clone = this.tierBoardRef.nativeElement.cloneNode(true) as HTMLElement;
+    clone.querySelectorAll('.no-export').forEach(el => el.remove());
+    clone.classList.add('export-zoom');
+
+    const container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.opacity = '0';
+    container.appendChild(clone);
+    document.body.appendChild(container);
+
+    htmlToImage.toJpeg(clone,{
+      quality: 1,
+      pixelRatio: 2
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `tier-list.jpg`;
+        link.href = dataUrl;
+        link.click();
+
+        document.body.removeChild(container);
+      });
   }
 
 }

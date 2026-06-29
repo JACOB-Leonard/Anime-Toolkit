@@ -21,7 +21,14 @@
   --btn-bg: #3498db;
   --btn-hover: #2980b9;
   --btn-text: #fff;
-  
+
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --bg-modal: #ffffff;
+  --modal-border: #ddd;
+  --tag-bg: rgba(0, 0, 0, 0.06);
+  --tag-hover: rgba(0, 0, 0, 0.12);
+  --meta-bg: rgba(0, 0, 0, 0.06);
+  --highlight-color: #222;
 }
 
 .dark {
@@ -49,6 +56,14 @@
 
   --overlay-bg: rgba(0, 0, 0, 0.7);
   --bg-modal: #2a2a2a;
+  --highlight-color: #fff;
+
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+  --bg-modal: #2a2a2a;
+  --modal-border: #444;
+  --tag-bg: rgba(255, 255, 255, 0.08);
+  --tag-hover: rgba(255, 255, 255, 0.14);
+  --meta-bg: rgba(255, 255, 255, 0.08);
   --highlight-color: #fff;
 }
 
