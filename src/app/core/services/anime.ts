@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {from, map, mergeMap, Observable, timer, toArray} from 'rxjs';
 import { Anime } from '../models/anime.model';
+import { environment } from '../../../environments/environment';
 
 interface AnimeSeasonResponse {
   data: Anime[];
@@ -14,10 +15,10 @@ interface AnimeSeasonResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
-  private BASE_URL = 'https://api.jikan.moe/v4';
+  private BASE_URL = environment.apiUrl;
   private seasons = ['winter', 'spring', 'summer', 'fall']; 
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getSeason(
     season: string,
