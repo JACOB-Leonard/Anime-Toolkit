@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
-import { TierListPage } from './features/tier-list/tier-list-page/tier-list-page';
+import { Component, inject } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
+import { RouterOutlet } from '@angular/router';
+import { Navbar } from './shared/navbar/navbar';
 
 @Component({
   selector: 'app-root',
-  imports: [TierListPage],
+  imports: [RouterOutlet, Navbar],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
-  standalone: true,
 })
 export class App {
-  constructor(public theme: ThemeService) {}
+
+  public theme = inject(ThemeService);
 
   ngOnInit() {
     this.theme.initTheme();
