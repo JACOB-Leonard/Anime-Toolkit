@@ -3,7 +3,7 @@
     <!-- Saison -->
     <div class="field">
       <label>Saison</label>
-      <select [(ngModel)]="season" name="season">
+      <select [ngModel]="season()" (ngModelChange)="season.set($event)" name="season">
         <option value="">Toute l’année</option>
         <option value="winter">❄️ Winter</option>
         <option value="spring">🌸 Spring</option>
@@ -17,7 +17,8 @@
       <label>Année</label>
       <input
         type="number"
-        [(ngModel)]="year"
+        [ngModel]="year()"
+        (ngModelChange)="year.set($event)"
         name="year"
         min="1917"
         max="2100"
@@ -29,21 +30,23 @@
       <label class="filter-chip">
         <input
           type="checkbox"
-          [checked]="allSelected"
+          [checked]="allSelected()"
           (change)="toggleAll()"
         />
         <span>All</span>
       </label>
       
-      <label *ngFor="let type of animeTypes" class="filter-chip">
-        <input
-          type="checkbox"
-          [(ngModel)]="type.checked"
-          name="filter-{{ type.value }}"
-          (change)="updateAllState()"
-        />
-        <span>{{ type.label }}</span>
-      </label>
+      @for (type of animeTypes(); track type.value) {
+        <label class="filter-chip">
+          <input
+            type="checkbox"
+            [checked]="type.checked"
+            [name]="'filter-' + type.value"
+            (change)="toggleType(type.value)"
+          />
+          <span>{{ type.label }}</span>
+        </label>
+      }
     </div>
 
     <!-- Bouton -->

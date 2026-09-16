@@ -9,9 +9,13 @@
   <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
 
   <div class="status">
-    <p>Pages chargées : {{ currentPage }} / {{ totalPages }}</p>
-    <p *ngIf="loading" class="loading">🔄 Chargement des résultats…</p>
-    <p *ngIf="!loading && noResults" class="no-results">😕 Aucun anime trouvé pour cette recherche.</p>
+    <p>Pages chargées : {{ currentPage() }} / {{ totalPages() }}</p>
+    @if(loading()){
+      <p class="loading">🔄 Chargement des résultats…</p>
+    }
+    @if(!loading() && noResults()){
+      <p class="no-results">😕 Aucun anime trouvé pour cette recherche.</p>
+    }
   </div>
 
   <app-tier-board

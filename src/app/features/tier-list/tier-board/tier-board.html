@@ -1,79 +1,90 @@
 <div #tierBoard class="tier-board export-area">
-  <div *ngFor="let tier of tierNames; let i = index" class="tier-row">
-    <div class="tier-label-box" [style.background]="getTierColor(tier, i)">
-      <input [(ngModel)]="tierListLabels[tier]" class="tier-label" />
-    </div>
+  @for(tier of tierOrder; track tier; let i = $index) {
+    <div class="tier-row">
+      <div class="tier-label-box" [style.background]="getTierColor(tier, i)">
+        <input [(ngModel)]="tierListLabels[tier]" class="tier-label" />
+      </div>
 
-    <div
-      class="tier-content"
-      cdkDropList
-      [cdkDropListData]="tierList[tier]"
-      [cdkDropListConnectedTo]="dropListIds"
-      [id]="'tier-' + tier"
-      (cdkDropListDropped)="onDrop($event)"
-      cdkDropListSortingDisabled="false"
-    >
-      <div *ngFor="let anime of tierList[tier]" cdkDrag>
-        <app-anime-card [anime]="anime"></app-anime-card>
+      <div
+        class="tier-content"
+        cdkDropList
+        [cdkDropListData]="tierList[tier]"
+        [cdkDropListConnectedTo]="dropListIds"
+        [id]="'tier-' + tier"
+        (cdkDropListDropped)="onDrop($event)"
+        [cdkDropListSortingDisabled]="false"
+      >
+        @for(anime of tierList[tier]; track anime.mal_id) {
+          <app-anime-card cdkDrag [anime]="anime"></app-anime-card>
+        }
+      </div>
+
+      <div class="tier-actions no-export">
+        <button (click)="openSettings(tier, i)" title="Paramètres">⚙</button>
+        <button (click)="moveTierUp(i)" [disabled]="i === 0" title="Monter">⬆</button>
+        <button
+          (click)="moveTierDown(i)"
+          [disabled]="i === tierOrder.length - 1"
+          title="Descendre"
+        >
+          ⬇
+        </button>
       </div>
     </div>
-
-    <div class="tier-actions no-export">
-      <button (click)="openSettings(tier, i)" title="Paramètres">⚙</button>
-      <button (click)="moveTierUp(i)" [disabled]="i === 0" title="Monter">⬆</button>
-      <button
-        (click)="moveTierDown(i)"
-        [disabled]="i === tierNames.length - 1"
-        title="Descendre"
-      >
-        ⬇
-      </button>
-    </div>
-  </div>
+  }
 </div>
 
 <div class="export-bar no-export">
-  <button class="export-btn" (click)="exportAsImage()" *ngIf="serviceAvailable">
-    📸 Télécharger l’image
-  </button>
+  @if(!serviceAvailable){
+    <p>Téléchargment désactivée</p>
+  }
+  @else{
+    <button class="export-btn" (click)="exportAsImage()">
+      📸 Télécharger l’image
+    </button>
+  }
 </div>
 
 
 <div class="unassigned-container">
-  <div *ngFor="let type of nonEmptyUnassignedTypes">
-    <div class="tier-row unassigned-row">
-      <div class="tier-header" (click)="toggleType(type)">
-        {{ type }} ({{ unassignedTypes[type].length }})
-        <span>{{ isCollapsed(type) ? '▶' : '▼' }}</span>
-      </div>
-
-      <div
-        *ngIf="!isCollapsed(type)"
-        class="tier-content"
-        cdkDropList
-        [id]="'unassigned-' + type"
-        [cdkDropListData]="unassignedTypes[type]"
-        [cdkDropListConnectedTo]="dropListIds.concat(connectedUnassignedIds)"
-        (cdkDropListDropped)="onDrop($event)"
-      >
-        <div *ngFor="let anime of unassignedTypes[type]" cdkDrag>
-          <app-anime-card [anime]="anime"></app-anime-card>
+  @for(type of nonEmptyUnassignedTypes; track type){
+    <div>
+      <div class="tier-row unassigned-row">
+        <div class="tier-header" (click)="toggleType(type)">
+          {{ type }} ({{ unassignedTypes[type].length }})
+          <span>{{ isCollapsed(type) ? '▶' : '▼' }}</span>
         </div>
+
+        @if(!isCollapsed(type)){
+          <div
+            class="tier-content"
+            cdkDropList
+            [id]="'unassigned-' + type"
+            [cdkDropListData]="unassignedTypes[type]"
+            [cdkDropListConnectedTo]="dropListIds.concat(connectedUnassignedIds)"
+            (cdkDropListDropped)="onDrop($event)"
+          >
+            @for(anime of unassignedTypes[type]; track anime.mal_id) {
+              <app-anime-card cdkDrag [anime]="anime"></app-anime-card>
+            }
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
 </div>
 
+@if(selectedTier(); as tier){
 <app-tier-settings-modal
-  *ngIf="selectedTier"
-  [tier]="selectedTier"
-  [label]="tierListLabels[selectedTier]"
-  [color]="tierColors[selectedTier]"
-  [index]="selectedTierIndex"
-  (addAbove)="addTierAbove(selectedTierIndex)"
-  (addBelow)="addTierBelow(selectedTierIndex)"
+  [tier]="tier"
+  [label]="tierListLabels[tier]"
+  [color]="tierColors[tier]"
+  [index]="selectedTierIndex()"
+  (addAbove)="addTierAbove(selectedTierIndex())"
+  (addBelow)="addTierBelow(selectedTierIndex())"
   (colorChange)="updateTierColor($event)"
-  (clearTier)="clearTier(selectedTier)"
-  (deleteTier)="removeTier(selectedTierIndex)"
+  (clearTier)="clearTier(tier)"
+  (deleteTier)="removeTier(selectedTierIndex())"
   (close)="closeSettings()"
-></app-tier-settings-modal>
+/>
+}

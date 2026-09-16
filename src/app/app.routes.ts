@@ -4,6 +4,6 @@ import { StaffComparatorPage } from './features/staff-comparator/staff-comparato
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'tier-list', pathMatch: 'full' },
-  { path: 'tier-list', component: TierListPage },
-  { path: 'staff-comparator', component:StaffComparatorPage }
+  { path: 'tier-list', title: 'AnimeToolkit - Tier List', component: TierListPage },
+  { path: 'staff-comparator', title: 'AnimeToolkit - Staff Comparator', component:StaffComparatorPage }
 ];

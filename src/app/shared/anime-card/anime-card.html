@@ -1,5 +1,5 @@
-<div class="anime-card" cdkDrag>
-  <img class="cover" [src]="currentImage" alt="{{ anime.title }}" cdkDragHandle />
+<div class="anime-card">
+  <img class="cover" [src]="currentImage()" alt="{{ anime().title }}" cdkDragHandle />
 
   <div class="corner-btn-container">
     <button class="image-picker-btn" (click)="toggleModal($event)">
@@ -8,133 +8,144 @@
   </div>
 </div>
 
-<div class="overlay" *ngIf="showModal" (click)="showModal = false" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
-  <div class="modal" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+@if(showModal()){
+  <div class="overlay" (click)="showModal.set(false)" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+    <div class="modal" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
 
-    <div class="left">
-      <div class="main-image-container">
-        <img
-          class="main-image"
-          [src]="currentImage"
-          (click)="toggleThumbnails()"
-        />
+      <div class="left">
+        <div class="main-image-container">
+          <img
+            class="main-image"
+            [src]="currentImage()"
+            alt="{{ anime().title }} - cover"
+          />
+        </div>
+        <div class="thumbnails">
+          @for(img of pictures(); track img) {
+            <img
+              [src]="img"
+              (click)="selectImage(img)"
+              [class.active]="img === currentImage()"
+            />
+          }
+        </div>
       </div>
-      <div class="thumbnails">
-        <img
-          *ngFor="let img of pictures"
-          [src]="img"
-          (click)="selectImage(img)"
-          [class.active]="img === currentImage"
-        />
+
+      <div class="center">
+
+        <h2>{{ anime().title }}</h2>
+
+        @if(anime().title_english){
+          <h3>{{ anime().title_english }}</h3>
+        }
+
+        <hr />
+
+        <div class="meta">
+
+          <div class="meta-row">
+
+            <span class="meta-badge">
+              {{ anime().type }}
+            </span>
+
+            <span class="meta-badge">
+              {{ anime().source }}
+            </span>
+
+            <span class="meta-badge">
+              @if(anime().episodes == null){
+                ?? eps
+              }
+              @else{
+                {{ anime().episodes }} eps
+              }
+            </span>
+
+            <span class="meta-badge">
+              @if(anime().duration == "Unknown"){
+                ?? min per ep
+              }
+              @else{
+                {{ anime().duration }}
+              }
+            </span>
+
+          </div>
+
+          <div class="meta-row">
+
+            <span class="meta-badge">
+              {{ anime().season | titlecase }}
+              {{ anime().year }}
+            </span>
+
+            @if (anime().status) {
+              <span
+                class="meta-badge"
+                [class.status-airing]="anime().status === 'Currently Airing'"
+                [class.status-finished]="anime().status === 'Finished Airing'"
+                [class.status-not-aired]="anime().status === 'Not yet aired'"
+              >
+                {{ anime().status }}
+              </span>
+            }
+          </div>
+
+          @if(anime().aired?.['from']){
+            <div class="meta-row">
+
+              <span class="meta-date">
+                Aired:
+                {{ anime().aired?.['from'] | date:'mediumDate' }} to
+                {{ anime().aired?.['to'] | date:'mediumDate' }}
+              </span>
+            </div>
+          }
+        </div>
+
+        <p class="synopsis">
+          {{ anime().synopsis }}
+        </p>
+
+        <div class="tags">
+          <h4>Genres</h4>
+          <div class="tag-list">
+            @for(genre of anime().genres; track genre.mal_id) {
+              <span class="tag">
+                {{ genre.name }}
+              </span>
+            }
+            @for(theme of anime().themes; track theme.mal_id) {
+              <span class="tag">
+                {{ theme.name }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="tags">
+          <h4>Studios</h4>
+          <div class="tag-list">
+            @for(studio of anime().studios; track studio.mal_id) {
+              <span class="tag studio">
+                {{ studio.name }}
+              </span>
+            }
+          </div>
+        </div>
       </div>
+
+      @if(safeTrailerUrl()){
+        <div class="right">
+          <div class="video-wrapper">
+            <iframe
+              [src]="safeTrailerUrl()"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      }
     </div>
-
-    <div class="center">
-
-      <h2>{{ anime.title }}</h2>
-
-      <h3 *ngIf="anime.title_english">
-        {{ anime.title_english }}
-      </h3>
-
-      <hr />
-
-      <div class="meta">
-
-        <div class="meta-row">
-
-          <span class="meta-badge">
-            {{ anime.type }}
-          </span>
-
-          <span class="meta-badge">
-            {{ anime.source }}
-          </span>
-
-          <span class="meta-badge">
-            {{ anime.episodes }} eps
-          </span>
-
-          <span class="meta-badge">
-            {{ anime.duration }}
-          </span>
-
-        </div>
-
-        <div class="meta-row">
-
-          <span class="meta-badge">
-            {{ anime.season | titlecase }}
-            {{ anime.year }}
-          </span>
-
-          <span
-            class="meta-badge"
-            *ngIf="anime.status">
-            {{ anime.status }}
-          </span>
-
-          <span
-            class="meta-badge airing"
-            *ngIf="anime.airing">
-            Airing
-          </span>
-        </div>
-
-        <div
-          class="meta-row"
-          *ngIf="anime.aired?.['from']">
-
-          <span class="meta-date">
-
-            Aired:
-            {{ anime.aired?.['from'] | date:'mediumDate' }}
-            {{ anime.aired?.['to'] | date:'mediumDate' }}
-          </span>
-        </div>
-      </div>
-
-      <p class="synopsis">
-        {{ anime.synopsis }}
-      </p>
-
-      <div class="tags">
-        <h4>Genres</h4>
-        <div class="tag-list">
-          <span
-            *ngFor="let genre of anime.genres"
-            class="tag">
-            {{ genre.name }}
-          </span>
-          <span
-            *ngFor="let theme of anime.themes"
-            class="tag">
-            {{ theme.name }}
-          </span>
-        </div>
-      </div>
-
-      <div class="tags">
-        <h4>Studios</h4>
-        <div class="tag-list">
-          <span
-            *ngFor="let studio of anime.studios"
-            class="tag studio">
-
-            {{ studio.name }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="right" *ngIf="safeTrailerUrl">
-      <div class="video-wrapper">
-        <iframe
-          [src]="safeTrailerUrl"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-
   </div>
-</div>
+}

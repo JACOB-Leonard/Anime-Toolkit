@@ -180,8 +180,16 @@
   white-space: nowrap;
 }
 
-.meta-badge.airing {
+.status-airing {
   background: #2e7d32;
+}
+
+.status-finished {
+  background-color: #1565c0;
+}
+
+.status-not-aired {
+  background-color: #c62828;
 }
 
 .meta-date {

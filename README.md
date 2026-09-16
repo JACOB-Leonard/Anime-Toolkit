@@ -1,6 +1,6 @@
 # 🎌 Anime Toolkit
 
-Interactive anime tier list built with Angular and Jikan API.
+Interactive anime tier list built with Angular and Tenrai API.
 
 ## ✨ Features
 - Search anime by season and year

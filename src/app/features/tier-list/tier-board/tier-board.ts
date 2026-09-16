@@ -1,23 +1,20 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, ElementRef, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AnimeCard } from '../../../shared/anime-card/anime-card';
-import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { TierSettingsModal } from '../../../shared/tier-settings-modal/tier-settings-modal';
 import { Anime } from '../../../core/models/anime.model';
 import * as htmlToImage from 'html-to-image';
 
-
 @Component({
   selector: 'app-tier-board',
   templateUrl: './tier-board.html',
   styleUrls: ['./tier-board.scss'],
-  standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule, AnimeCard, TierSettingsModal],
+  imports: [DragDropModule, FormsModule, AnimeCard, TierSettingsModal],
 })
-export class TierBoard {
-  tierList: Record<string, any[]> = {
+export class TierBoard implements OnInit {
+  tierList: Record<string, Anime[]> = {
       S: [],
       A: [],
       B: [],
@@ -40,19 +37,15 @@ export class TierBoard {
 
   serviceAvailable = false;
 
-  get tierNames(): string[] {
-    return this.tierOrder;
-  }
-
   get dropListIds(): string[] {
     return [
       ...this.unassignedTypeKeys.map(t => `unassigned-${t}`),
-      ...this.tierNames.map(t => 'tier-' + t)
+      ...this.tierOrder.map(t => 'tier-' + t)
     ];
   }
 
-  get nonEmptyUnassignedTypes() {
-    return this.typeOrder.filter(type => this.unassignedTypes[type]?.length);
+  get nonEmptyUnassignedTypes(): string[] {
+    return this.typeOrder.filter(type => (this.unassignedTypes[type]?.length ?? 0) > 0);
   }
 
   get connectedUnassignedIds(): string[] {
@@ -71,7 +64,7 @@ export class TierBoard {
     [this.tierOrder[index], this.tierOrder[index + 1]];
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.tierOrder = Object.keys(this.tierList);
 
     this.tierOrder.forEach((tier,index) => {
@@ -79,51 +72,69 @@ export class TierBoard {
     });
   }
 
-  onDrop(event: CdkDragDrop<Anime[]>) {
-    const prev = event.previousContainer;
-    const curr = event.container;
+  onDrop(event: CdkDragDrop<Anime[]>): void {
+    const previousList = event.previousContainer.data;
+    const currentList = event.container.data;
 
-    if (!prev || !curr) return;
-
-    if (prev === curr) {
-      moveItemInArray(curr.data, event.previousIndex, event.currentIndex);
+    if (!previousList || !currentList) {
       return;
     }
 
-    const anime = prev.data[event.previousIndex];
-
-    prev.data.splice(event.previousIndex, 1);
-
-    if (curr.id.startsWith('tier-')) {
-      curr.data.splice(event.currentIndex, 0, anime);
+    if (event.previousContainer === event.container) {
+      moveItemInArray(
+        currentList,
+        event.previousIndex,
+        event.currentIndex
+      );
       return;
     }
 
-    if (curr.id.startsWith('unassigned-')) {
+    const anime = previousList[event.previousIndex];
+
+    if (!anime) {
+      console.error('Anime introuvable lors du déplacement', {
+        previousIndex: event.previousIndex,
+        previousList
+      });
+      return;
+    }
+
+    previousList.splice(event.previousIndex, 1);
+
+    if (event.container.id.startsWith('tier-')) {
+      currentList.splice(event.currentIndex, 0, anime);
+      return;
+    }
+
+    if (event.container.id.startsWith('unassigned-')) {
       const type = anime.type || 'Other';
 
       if (!this.unassignedTypes[type]) {
         this.unassignedTypes[type] = [];
       }
 
-      this.unassignedTypes[type].splice(event.currentIndex, 0, anime);
+      this.unassignedTypes[type].splice(
+        event.currentIndex,
+        0,
+        anime
+      );
     }
   }
 
 
   //Modal management
 
-  selectedTier: string | null = null;
-  selectedTierIndex = -1;
+  selectedTier = signal<string | null>(null);
+  selectedTierIndex = signal(-1);
 
-  openSettings(tier: string, index: number) {
-    this.selectedTier = tier;
-    this.selectedTierIndex = index;
+  openSettings(tier: string, index: number): void {
+    this.selectedTier.set(tier);
+    this.selectedTierIndex.set(index);
   }
 
-  closeSettings() {
-    this.selectedTier = null;
-    this.selectedTierIndex = -1;
+  closeSettings(): void {
+    this.selectedTier.set(null);
+    this.selectedTierIndex.set(-1);
   }
 
   private generateTierId(): string {
@@ -140,6 +151,7 @@ export class TierBoard {
 
     this.tierOrder.splice(index, 0, newTier);
     this.initializeTier(newTier);
+    this.selectedTierIndex.update((value) => value + 1);
   }
 
   addTierBelow(index: number) {
@@ -209,9 +221,12 @@ export class TierBoard {
 
   // Modal Color
 
-  updateTierColor(color: string) {
-    if (!this.selectedTier) return;
-    this.tierCustomColors[this.selectedTier] = color;
+  updateTierColor(color: string): void {
+    const tier = this.selectedTier();
+
+    if (!tier) return;
+
+    this.tierCustomColors[tier] = color;
   }
 
   // Collapsed Types

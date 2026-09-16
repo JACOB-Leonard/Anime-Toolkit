@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { AnimeService } from '../../../core/services/anime';
 import { ThemeService } from '../../../core/services/theme.service';
 import { SearchBar } from '../search-bar/search-bar';
@@ -9,8 +8,7 @@ import { AnimeSeasonResponse } from '../../../core/models/anime-season-response.
 
 @Component({
   selector: 'app-tier-list-page',
-  standalone: true,
-  imports: [CommonModule, SearchBar, TierBoard],
+  imports: [ SearchBar, TierBoard],
   templateUrl: './tier-list-page.html',
   styleUrls: ['./tier-list-page.scss'],
 })
@@ -20,26 +18,24 @@ export class TierListPage {
   unassignedByType: Record<string, Anime[]> = {};
   collapsedTypes = new Set<string>();
 
-  animeIds = new Set<number>();
+  readonly animeIds = new Set<number>();
 
-  currentPage = 0;
-  totalPages = 0;
+  readonly currentPage = signal(0);
+  readonly totalPages = signal(0);
 
-  loading = false;
-  noResults = false;
+  readonly loading = signal(false);
+  readonly noResults = signal(false);
 
   readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'TV Special', 'Music'];
 
-  constructor(
-    private animeService: AnimeService,
-    public theme: ThemeService
-  ) {}
+  private readonly animeService = inject(AnimeService);
+  readonly theme = inject(ThemeService);
 
   /* =======================
      SEARCH
      ======================= */
 
-  onSearch(season: string, year: number, filters: string[]) {
+  onSearch(season: string, year: number, filters: string[]): void {
     this.resetState();
     this.loadPage(season, year, 1, filters);
   }
@@ -47,10 +43,10 @@ export class TierListPage {
   private resetState() {
     this.animes = [];
     this.animeIds.clear();
-    this.currentPage = 0;
-    this.totalPages = 0;
-    this.noResults = false;
-    this.loading = true;
+    this.currentPage.set(0);
+    this.totalPages.set(0);
+    this.noResults.set(false);
+    this.loading.set(true);
   }
 
   /* =======================
@@ -65,12 +61,12 @@ export class TierListPage {
           this.animes.push(...unique);
           this.regroupUnassigned();
 
-          this.currentPage = res.pagination.current_page;
-          this.totalPages = res.pagination.last_visible_page;
+          this.currentPage.set(res.pagination.current_page);
+          this.totalPages.set(res.pagination.last_visible_page);
 
           if (!res.pagination.has_next_page) {
-            this.loading = false;
-            this.noResults = this.animes.length === 0;
+            this.loading.set(false);
+            this.noResults.set(this.animes.length === 0);
             return;
           }
 
@@ -79,8 +75,8 @@ export class TierListPage {
           }, 1000);
         },
         error: () => {
-          this.loading = false;
-          this.noResults = true;
+          this.loading.set(false);
+          this.noResults.set(true);
         }
       });
   }

@@ -1,29 +1,31 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, computed, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule],
   templateUrl: './search-bar.html',
   styleUrls: ['./search-bar.scss'],
-  standalone: true
 })
 export class SearchBar {
-  season = this.getCurrentSeason();
-  year = new Date().getFullYear();
-  allSelected = false;
+  
+  readonly season = signal(this.getCurrentSeason());
+  readonly year = signal(new Date().getFullYear());
 
-  animeTypes = [
+  readonly animeTypes = signal([
     { label: 'TV', value: 'TV', checked: true },
     { label: 'Movie', value: 'Movie', checked: false },
     { label: 'OVA', value: 'OVA', checked: false },
     { label: 'ONA', value: 'ONA', checked: false },
-    { label: 'Special', value: 'tv_special', checked: false },
+    { label: 'TV Special', value: 'TV Special', checked: false },
     { label: 'Music', value: 'Music', checked: false },
-  ];
+  ]);
 
-  @Output() search = new EventEmitter<{ season: string; year: number; filters: string[] }>();
+  readonly allSelected = computed(() =>
+    this.animeTypes().every(type => type.checked)
+  );
+
+  readonly search = output<{ season: string; year: number; filters: string[] }>();
 
   getCurrentSeason(): string {
     const month = new Date().getMonth() + 1;
@@ -34,22 +36,36 @@ export class SearchBar {
     return 'fall';
   }
 
-  toggleAll() {
-    this.allSelected = !this.allSelected;
-
-    this.animeTypes.forEach(type => {
-      type.checked = this.allSelected;
-    });
+  toggleAll(): void {
+    const newValue = !this.allSelected();
+    
+    this.animeTypes.update(types =>
+      types.map(type => ({
+        ...type,
+        checked: newValue,
+      })) 
+    );
   }
 
-  updateAllState() {
-    this.allSelected = this.animeTypes.every(t => t.checked);
+  toggleType(value: string): void {
+    this.animeTypes.update(types =>
+      types.map(type =>
+        type.value === value
+          ? { ...type, checked: !type.checked }
+          : type
+      )
+    );
   }
 
-  onSubmit() {
-    const selectedFilters = this.animeTypes
+  onSubmit(): void {
+    const selectedFilters = this.animeTypes()
       .filter(type => type.checked)
       .map(type => type.value);
-    this.search.emit({ season: this.season, year: this.year, filters: selectedFilters });
+    
+      this.search.emit({
+        season: this.season(),
+        year: this.year(),
+        filters: selectedFilters
+      });
   }
 }
