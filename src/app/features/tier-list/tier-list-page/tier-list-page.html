@@ -2,12 +2,12 @@
   <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
 
   <div class="status">
-    <p>Pages chargées : {{ currentPage() }} / {{ totalPages() }}</p>
+    <p>Pages loaded: {{ currentPage() }} / {{ totalPages() }}</p>
     @if(loading()){
-      <p class="loading">🔄 Chargement des résultats…</p>
+      <p class="loading">🔄 Loading results…</p>
     }
     @if(!loading() && noResults()){
-      <p class="no-results">😕 Aucun anime trouvé pour cette recherche.</p>
+      <p class="no-results">😕 No anime found for this search.</p>
     }
   </div>
 

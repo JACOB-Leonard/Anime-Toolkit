@@ -2,9 +2,9 @@
   <div class="search-main">
     <!-- Saison -->
     <div class="field">
-      <label>Saison</label>
+      <label>Season</label>
       <select [ngModel]="season()" (ngModelChange)="season.set($event)" name="season">
-        <option value="">Toute l’année</option>
+        <option value="">All Year</option>
         <option value="winter">❄️ Winter</option>
         <option value="spring">🌸 Spring</option>
         <option value="summer">☀️ Summer</option>
@@ -12,9 +12,9 @@
       </select>
     </div>
 
-    <!-- Année -->
+    <!-- year -->
     <div class="field">
-      <label>Année</label>
+      <label>Year</label>
       <input
         type="number"
         [ngModel]="year()"
@@ -51,7 +51,7 @@
 
     <!-- Bouton -->
     <button type="submit" class="search-btn">
-      🔍 Rechercher
+      🔍 Search
     </button>
   </div>
 </form>
