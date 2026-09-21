@@ -1,0 +1,35 @@
+<section class="comparison-list">
+
+  <div class="tier-header" (click)="toggleCollapsed()">
+    Staff
+    <span>{{ collapsed() ? '▶' : '▼' }}</span>
+  </div>
+
+  @if (!collapsed()) {
+    @for (item of commonStaff(); track item.staff.mal_id) {
+      <div class="comparison-row">
+
+        <div class="positions left-positions">
+          @for (position of item.leftPosition; track position) {
+            <span>{{ position }}</span>
+          }
+        </div>
+
+        <div class="staff">
+          <img
+            [src]="item.staff.images.jpg.image_url"
+            [alt]="item.staff.name"
+          >
+          <span>{{ item.staff.name }}</span>
+        </div>
+
+        <div class="positions right-positions">
+          @for (position of item.rightPosition; track position) {
+            <span>{{ position }}</span>
+          }
+        </div>
+
+      </div>
+    }
+  }
+</section>

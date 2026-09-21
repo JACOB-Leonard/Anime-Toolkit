@@ -1,0 +1,144 @@
+.comparison-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.tier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--tier-actions-bg);
+  color: var(--text-main);
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  user-select: none;
+  min-width: 120px;
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+  min-width: 0;
+  padding: 16px 0;
+  border-top: 1px solid rgb(255, 255, 255);
+}
+
+.comparison-row:first-child {
+  border-top: none;
+}
+
+.characters-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.characters {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.character,
+.voice-actor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.character {
+  width: 120px;
+  flex: 0 0 auto;
+}
+
+.character img,
+.voice-actor img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.character span,
+.voice-actor span {
+  font-size: 0.85rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.voice-actor {
+  min-width: 0;
+}
+
+.characters-column > button {
+  width: fit-content;
+}
+
+.hidden-character {
+  opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+  .comparator {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+    padding: 16px;
+  }
+
+  .column.left {
+    grid-column: 1;
+    order: 1;
+  }
+
+  .column.center {
+    grid-column: 1;
+    order: 2;
+  }
+
+  .column.right {
+    grid-column: 1;
+    order: 3;
+  }
+
+  .comparison-list {
+    grid-column: 1;
+    order: 4;
+  }
+
+  .selector-container {
+    height: auto;
+    min-height: 300px;
+  }
+
+  .comparison-row {
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .character {
+    width: 65px;
+  }
+
+  .character img,
+  .voice-actor img {
+    width: 50px;
+    height: 50px;
+  }
+}

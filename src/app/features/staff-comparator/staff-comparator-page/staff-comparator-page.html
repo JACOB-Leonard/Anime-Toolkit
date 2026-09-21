@@ -1,1 +1,51 @@
-<p>staff-comparator-page works!</p>
+<main class="comparator">
+  <section class="column left">
+    <div class="selector-container">
+      <app-anime-selector
+        (animeSelected)="leftSelectedAnime.set($event)"
+        (charactersList)="leftCharactersList.set($event)"
+        (staffList)="leftStaffList.set($event)"
+      />
+    </div>
+  </section>
+
+  <section class="column center">
+    <div class="selector-container">
+      @if(leftSelectedAnime() && rightSelectedAnime()) {
+        <select [ngModel]="selectedLanguage()"
+                (ngModelChange)="selectedLanguage.set($event)"
+                name="language">
+          @for (language of availableLanguages(); track language) {
+            <option [value]="language">{{ language }}</option>
+          }
+        </select>
+      }
+    </div>
+  </section>
+
+  <section class="column right">
+    <div class="selector-container">
+      <app-anime-selector
+        (animeSelected)="rightSelectedAnime.set($event)"
+        (charactersList)="rightCharactersList.set($event)"
+        (staffList)="rightStaffList.set($event)"
+      />
+    </div>
+  </section>
+
+  @if(leftSelectedAnime() && rightSelectedAnime()) {
+    <app-voice-actor-comparison
+      [leftCharacters]="leftCharactersList()"
+      [rightCharacters]="rightCharactersList()"
+      [language]="selectedLanguage()"
+    />
+
+    <br/>
+
+    <app-staff-comparison
+      [leftStaff]="leftStaffList()"
+      [rightStaff]="rightStaffList()"
+    />
+  }
+
+</main>

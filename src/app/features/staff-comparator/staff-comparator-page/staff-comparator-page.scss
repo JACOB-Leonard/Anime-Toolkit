@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.comparator {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) minmax(0, 1fr);
+  column-gap: 24px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.column {
+  min-width: 0;
+}
+
+.selector-container {
+  height: 400px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+app-voice-actor-comparison,
+app-staff-comparison {
+  grid-column: 1 / -1;
+}
+
+app-staff-comparison {
+  margin-top: 5px;
+}
+
+@media (max-width: 500px) {
+  .comparator {
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    column-gap: 8px;
+    row-gap: 16px;
+    padding: 8px;
+  }
+
+  .column.left {
+    grid-column: 1;
+  }
+
+  .column.center {
+    grid-column: 2;
+  }
+
+  .column.right {
+    grid-column: 3;
+  }
+
+  .selector-container {
+    min-height: 0;
+  }
+}
