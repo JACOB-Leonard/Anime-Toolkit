@@ -1,6 +1,6 @@
 import { Anime } from './anime.model';
 
-export interface AnimeSeasonResponse {
+export interface AnimeResponse {
   data: Anime[];
   pagination: {
     current_page: number;

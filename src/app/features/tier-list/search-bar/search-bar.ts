@@ -17,7 +17,7 @@ export class SearchBar {
     { label: 'Movie', value: 'Movie', checked: false },
     { label: 'OVA', value: 'OVA', checked: false },
     { label: 'ONA', value: 'ONA', checked: false },
-    { label: 'TV Special', value: 'TV Special', checked: false },
+    { label: 'TV Special', value: 'special', checked: false },
     { label: 'Music', value: 'Music', checked: false },
   ]);
 

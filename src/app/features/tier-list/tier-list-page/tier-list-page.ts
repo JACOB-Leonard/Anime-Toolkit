@@ -3,7 +3,7 @@ import { AnimeService } from '../../../core/services/anime';
 import { SearchBar } from '../search-bar/search-bar';
 import { TierBoard } from '../tier-board/tier-board';
 import { Anime } from '../../../core/models/anime.model';
-import { AnimeSeasonResponse } from '../../../core/models/anime-season-response.model';
+import { AnimeResponse } from '../../../core/models/animeResponse.model';
 
 @Component({
   selector: 'app-tier-list-page',
@@ -54,7 +54,7 @@ export class TierListPage {
   loadPage(season: string, year: number, page: number, filters: string[]) {
     this.getRequest(season, year, page, filters)
       .subscribe({
-        next: (res: AnimeSeasonResponse) => {
+        next: (res: AnimeResponse) => {
           const unique = this.extractUniqueAnimes(res.data, filters);
           this.animes.push(...unique);
           this.regroupUnassigned();
@@ -70,7 +70,7 @@ export class TierListPage {
 
           setTimeout(() => {
             this.loadPage(season, year, page + 1, filters);
-          }, 1000);
+          }, 250);
         },
         error: () => {
           this.loading.set(false);
@@ -114,8 +114,16 @@ export class TierListPage {
   private extractUniqueAnimes(data: Anime[], filters: string[]): Anime[] {
     return data.filter(anime => {
 
-      if (filters.length > 1 && !filters.includes(anime.type)) {
-        return false;
+      if (filters.length > 1) {
+        const matchesFilter = filters.some(filter =>
+          filter === 'special'
+            ? anime.type === 'TV Special'
+            : anime.type === filter
+        );
+
+        if (!matchesFilter) {
+          return false;
+        }
       }
 
       if (this.animeIds.has(anime.mal_id)) {

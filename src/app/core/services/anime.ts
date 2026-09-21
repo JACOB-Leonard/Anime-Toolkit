@@ -3,15 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {from, map, mergeMap, Observable, timer, toArray} from 'rxjs';
 import { Anime } from '../models/anime.model';
 import { environment } from '../../../environments/environment';
-
-interface AnimeSeasonResponse {
-  data: Anime[];
-  pagination: {
-    current_page: number;
-    last_visible_page: number;
-    has_next_page: boolean;
-  };
-}
+import { AnimeResponse } from '../models/animeResponse.model';
 
 @Injectable({ providedIn: 'root' })
 export class AnimeService {
@@ -24,12 +16,13 @@ export class AnimeService {
     season: string,
     year: number,
     page = 1
-  ): Observable<AnimeSeasonResponse> {
+  ): Observable<AnimeResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('sfw', 'true');
+      .set('sfw', 'false')
+      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','));
 
-    return this.http.get<AnimeSeasonResponse>(`${this.BASE_URL}/seasons/${year}/${season.toLowerCase()}`, { params });
+    return this.http.get<AnimeResponse>(`${this.BASE_URL}/seasons/${year}/${season.toLowerCase()}`, { params });
   }
 
   getSeasonByType(
@@ -37,23 +30,24 @@ export class AnimeService {
     year: number,
     type: string,
     page = 1
-  ): Observable<AnimeSeasonResponse> {
+  ): Observable<AnimeResponse> {
     const params = new HttpParams()
       .set('page', page)
-      .set('sfw', 'true')
+      .set('sfw', 'false')
+      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','))
       .set('filter', type);
 
-    return this.http.get<AnimeSeasonResponse>(
+    return this.http.get<AnimeResponse>(
       `${this.BASE_URL}/seasons/${year}/${season}`,
       { params }
     );
   }
 
-   getYear(year: number, page: number = 1): Observable<AnimeSeasonResponse> {
+   getYear(year: number, page: number = 1): Observable<AnimeResponse> {
 
     return from(this.seasons).pipe(
       mergeMap((season, i) =>
-        timer(i * 1000).pipe(
+        timer(i * 250).pipe(
           mergeMap(() => this.getSeason(season, year, page))
         )
       ),
@@ -75,11 +69,11 @@ export class AnimeService {
     );
   }
 
-  getYearByType(year: number, type: string, page: number = 1): Observable<AnimeSeasonResponse> {
+  getYearByType(year: number, type: string, page: number = 1): Observable<AnimeResponse> {
 
     return from(this.seasons).pipe(
       mergeMap((season, i) =>
-        timer(i * 1000).pipe(
+        timer(i * 250).pipe(
           mergeMap(() => this.getSeasonByType(season, year, type, page))
         )
       ),
@@ -98,6 +92,23 @@ export class AnimeService {
           }
         };
       })
+    );
+  }
+
+  searchAnime(
+    query: string,
+  ): Observable<Anime[]> {
+    let params = new HttpParams()
+      .set('q', query)
+      .set('sfw', 'false')
+      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','))
+      .set('order_by', 'popularity');
+
+    return this.http.get<AnimeResponse>(
+      `${this.BASE_URL}/anime`,
+      { params }
+    ).pipe(
+      map(response => response.data)
     );
   }
 
