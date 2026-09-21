@@ -1,11 +1,4 @@
 <div class="page-container">
-
-  <div class="theme-toggle-container">
-    <button class="theme-toggle" (click)="theme.toggleDark()">
-      {{ theme.isDark() ? '☀️ Mode Clair' : '🌙 Mode Sombre' }}
-    </button>
-  </div>
-
   <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
 
   <div class="status">

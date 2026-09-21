@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Navbar {
   menuOpen = false;
+  readonly theme = inject(ThemeService);
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { AnimeService } from '../../../core/services/anime';
-import { ThemeService } from '../../../core/services/theme.service';
 import { SearchBar } from '../search-bar/search-bar';
 import { TierBoard } from '../tier-board/tier-board';
 import { Anime } from '../../../core/models/anime.model';
@@ -29,7 +28,6 @@ export class TierListPage {
   readonly typeOrder = ['TV', 'Movie', 'OVA', 'ONA', 'TV Special', 'Music'];
 
   private readonly animeService = inject(AnimeService);
-  readonly theme = inject(ThemeService);
 
   /* =======================
      SEARCH
