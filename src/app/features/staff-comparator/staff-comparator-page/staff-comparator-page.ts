@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { AnimeSelector } from '../components/anime-selector/anime-selector';
 import { Anime } from '../../../core/models/anime.model';
 import { AnimeCharacter } from '../../../core/services/character.service';
@@ -53,8 +53,26 @@ export class StaffComparatorPage {
       const [, language] = key.split(':');
       commonLanguages.add(language);
     }
-
     return [...commonLanguages].sort();
   });
 
+  constructor() {
+    effect(() => {
+      const languages = this.availableLanguages();
+
+      if (languages.length === 0) {
+        return;
+      }
+
+      if (languages.includes(this.selectedLanguage())) {
+        return;
+      }
+
+      this.selectedLanguage.set(
+        languages.includes('Japanese')
+          ? 'Japanese'
+          : languages[0]
+      );
+    });
+  }
 }

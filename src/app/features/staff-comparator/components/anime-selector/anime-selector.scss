@@ -161,3 +161,165 @@
     height: 95px;
   }
 }
+
+.mobile-anime-slot {
+  display: none;
+}
+
+.search-modal-backdrop {
+  display: none;
+}
+
+@media (max-width: 500px) {
+
+  .desktop-anime-selector {
+    display: none;
+  }
+
+  .mobile-anime-slot {
+    width: 100%;
+    min-height: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px;
+
+    background: transparent;
+    color: var(--text-main);
+
+    border: 2px dashed var(--border-color);
+    border-radius: 10px;
+
+    cursor: pointer;
+  }
+
+  .mobile-anime-slot:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-anime-plus {
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .mobile-anime-placeholder {
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  .mobile-anime-slot:has(.mobile-anime-info) {
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .mobile-anime-slot img {
+    width: 48px;
+    height: 68px;
+    flex: 0 0 48px;
+
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .mobile-anime-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 0;
+  }
+
+  .mobile-anime-info strong {
+    font-size: 0.7rem;
+    line-height: 1.2;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-anime-info span {
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+
+  .search-modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgb(0 0 0 / 65%);
+
+    z-index: 9999;
+  }
+
+  .search-modal {
+    width: 100%;
+    max-width: 500px;
+    max-height: calc(100vh - 40px);
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg-main);
+    color: var(--text-main);
+
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    overflow: hidden;
+  }
+
+  .search-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 14px;
+
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .search-modal-header strong {
+    font-size: 0.85rem;
+  }
+
+  .search-modal-close {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 6px;
+
+    background: var(--btn-bg);
+    color: var(--btn-text);
+
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .search-modal .search-container {
+    padding: 12px;
+    overflow-y: auto;
+  }
+
+  .search-modal .search-results {
+    position: static;
+
+    max-height: calc(100vh - 160px);
+
+    box-shadow: none;
+  }
+}

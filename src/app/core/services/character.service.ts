@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 export interface AnimeCharacter {
   character: {
     mal_id: number;
+    url: string;
     name: string;
     images: {
       jpg: {
@@ -19,6 +20,7 @@ export interface AnimeCharacter {
   voice_actors: {
     person: {
       mal_id: number;
+      url: string;
       name: string;
       images: {
         jpg: {

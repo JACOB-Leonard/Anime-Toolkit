@@ -1,97 +1,129 @@
 <section class="comparison-list">
 
-  <div class="tier-header" (click)="toggleCollapsed()">
-    Voice Actors
-    <span>{{ collapsed() ? '▶' : '▼' }}</span>
-  </div>
-
-  @if (!collapsed()) {
-    @for (item of commonVoiceActors(); track item.voiceActor.mal_id) {
-      <div class="comparison-row">
-        <div class="characters-column left-characters">
-          <div class="characters">
-            @for (character of item.leftCharacters; track character.character.mal_id) {
-              <div class="character">
-                <img
-                  [src]="character.character.images.jpg.image_url"
-                  [alt]="character.character.name"
-                >
-                <span>{{ character.character.name }}</span>
-              </div>
-            }
-          </div>
-
-          @if (item.hiddenLeftCharacters.length) {
-            <button (click)="toggleLeftCharacters(item.voiceActor.mal_id)">
-              @if (expandedLeftVoiceActors().has(item.voiceActor.mal_id)) {
-                Masquer
-              } @else {
-                +{{ item.hiddenLeftCharacters.length }}
-              }
-            </button>
-          }
-
-          @if (expandedLeftVoiceActors().has(item.voiceActor.mal_id)) {
-            <div class="characters">
-              @for (character of item.hiddenLeftCharacters; track character.character.mal_id) {
-                <div class="character hidden-character">
-                  <img
-                    [src]="character.character.images.jpg.image_url"
-                    [alt]="character.character.name"
-                  >
-                  <span>{{ character.character.name }}</span>
-                </div>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="voice-actor">
-          <img
-            [src]="item.voiceActor.images.jpg.image_url"
-            [alt]="item.voiceActor.name"
-          >
-          <span>{{ item.voiceActor.name }}</span>
-        </div>
-
-        <div class="characters-column right-characters">
-          <div class="characters">
-            @for (character of item.rightCharacters; track character.character.mal_id) {
-              <div class="character">
-                <img
-                  [src]="character.character.images.jpg.image_url"
-                  [alt]="character.character.name"
-                >
-                <span>{{ character.character.name }}</span>
-              </div>
-            }
-          </div>
-
-          @if (item.hiddenRightCharacters.length) {
-            <button (click)="toggleRightCharacters(item.voiceActor.mal_id)">
-              @if (expandedRightVoiceActors().has(item.voiceActor.mal_id)) {
-                Masquer
-              } @else {
-                +{{ item.hiddenRightCharacters.length }}
-              }
-            </button>
-          }
-
-          @if (expandedRightVoiceActors().has(item.voiceActor.mal_id)) {
-            <div class="characters">
-              @for (character of item.hiddenRightCharacters; track character.character.mal_id) {
-                <div class="character hidden-character">
-                  <img
-                    [src]="character.character.images.jpg.image_url"
-                    [alt]="character.character.name"
-                  >
-                  <span>{{ character.character.name }}</span>
-                </div>
-              }
-            </div>
-          }
-        </div>
+  @if (commonVoiceActors().length === 0) {
+    <div class="no-common">
+      <div class="no-common-content">
+        <strong>No common voice actors</strong>
+        <span>
+          No voice actors are shared between these two anime
+          in the selected language.
+        </span>
       </div>
+    </div>
+  } @else {
+    <div class="tier-header" (click)="toggleCollapsed()">
+      Voice Actors
+      <span>{{ collapsed() ? '▶' : '▼' }}</span>
+    </div>
+
+    @if (!collapsed()) {
+      @for (item of commonVoiceActors(); track item.voiceActor.mal_id) {
+        <div class="comparison-row">
+          <div class="characters-column left-characters">
+            <div class="characters">
+              @for (character of item.leftCharacters; track character.character.mal_id) {
+                <div class="character">
+                  <a
+                    [href]="character.character.url"
+                    target="_blank">
+                    <img
+                      [src]="character.character.images.jpg.image_url"
+                      [alt]="character.character.name"
+                    >
+                  </a>
+                  <span>{{ character.character.name }}</span>
+                </div>
+              }
+            </div>
+
+            @if (item.hiddenLeftCharacters.length) {
+              <button (click)="toggleLeftCharacters(item.voiceActor.mal_id)">
+                @if (expandedLeftVoiceActors().has(item.voiceActor.mal_id)) {
+                  Masquer
+                } @else {
+                  +{{ item.hiddenLeftCharacters.length }}
+                }
+              </button>
+            }
+
+            @if (expandedLeftVoiceActors().has(item.voiceActor.mal_id)) {
+              <div class="characters">
+                @for (character of item.hiddenLeftCharacters; track character.character.mal_id) {
+                  <div class="character hidden-character">
+                    <a
+                      [href]="character.character.url"
+                      target="_blank">
+                      <img
+                        [src]="character.character.images.jpg.image_url"
+                        [alt]="character.character.name"
+                      >
+                    </a>
+                    <span>{{ character.character.name }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="voice-actor">
+            <a 
+              [href]="item.voiceActor.url"
+              target="_blank">
+              <img
+                [src]="item.voiceActor.images.jpg.image_url"
+                [alt]="item.voiceActor.name"
+              >
+            </a>
+            <span>{{ item.voiceActor.name }}</span>
+          </div>
+
+          <div class="characters-column right-characters">
+            <div class="characters">
+              @for (character of item.rightCharacters; track character.character.mal_id) {
+                <div class="character">
+                  <a
+                    [href]="character.character.url"
+                    target="_blank">
+                    <img
+                      [src]="character.character.images.jpg.image_url"
+                      [alt]="character.character.name"
+                    >
+                  </a>
+                  <span>{{ character.character.name }}</span>
+                </div>
+              }
+            </div>
+
+            @if (item.hiddenRightCharacters.length) {
+              <button (click)="toggleRightCharacters(item.voiceActor.mal_id)">
+                @if (expandedRightVoiceActors().has(item.voiceActor.mal_id)) {
+                  Masquer
+                } @else {
+                  +{{ item.hiddenRightCharacters.length }}
+                }
+              </button>
+            }
+
+            @if (expandedRightVoiceActors().has(item.voiceActor.mal_id)) {
+              <div class="characters">
+                @for (character of item.hiddenRightCharacters; track character.character.mal_id) {
+                  <div class="character hidden-character">
+                    <a
+                      [href]="character.character.url"
+                      target="_blank">
+                      <img
+                        [src]="character.character.images.jpg.image_url"
+                        [alt]="character.character.name"
+                      >
+                    </a>
+                    <span>{{ character.character.name }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
     }
   }
 </section>

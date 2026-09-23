@@ -5,7 +5,7 @@
 
 .comparator {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
   column-gap: 24px;
   padding: 24px;
   box-sizing: border-box;
@@ -15,44 +15,126 @@
   min-width: 0;
 }
 
-.selector-container {
-  height: 400px;
+.column.center {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+}
+
+.selector-container {
   box-sizing: border-box;
+  text-align: center;
+}
+
+.selector-label{
+  margin-bottom: 8px;
 }
 
 app-voice-actor-comparison,
 app-staff-comparison {
   grid-column: 1 / -1;
+  margin-top: 5px;
 }
 
-app-staff-comparison {
+.no-common {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 120px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  padding: 24px;
+
+  background: var(--tier-actions-bg);
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+
+  text-align: center;
   margin-top: 5px;
+}
+
+.no-common-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.no-common-content span {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  opacity: 0.65;
+}
+
+@media (min-width: 1300px) {
+  app-anime-selector {
+    width: 500px;
+  }
+}
+
+@media (min-width: 870px) and (max-width: 1300px) {
+  app-anime-selector {
+    width: 300px;
+  }
 }
 
 @media (max-width: 500px) {
   .comparator {
-    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: 8px;
-    row-gap: 16px;
+    row-gap: 12px;
     padding: 8px;
+  }
+
+  .column {
+    min-width: 0;
   }
 
   .column.left {
     grid-column: 1;
   }
 
-  .column.center {
+  .column.right {
     grid-column: 2;
   }
 
-  .column.right {
-    grid-column: 3;
+  .column.center {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
   }
 
-  .selector-container {
-    min-height: 0;
+  .column.center .selector-container {
+    width: 100%;
+    max-width: 220px;
+  }
+
+  app-voice-actor-comparison,
+  app-staff-comparison,
+  .no-common {
+    grid-column: 1 / -1;
+  }
+
+  .no-common {
+    min-height: 100px;
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .no-common-content strong {
+    font-size: 0.8rem;
+  }
+
+  .no-common-content span {
+    font-size: 0.7rem;
   }
 }

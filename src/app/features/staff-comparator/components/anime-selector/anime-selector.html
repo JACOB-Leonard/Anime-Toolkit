@@ -1,72 +1,19 @@
-<div class="search-container">
-  <div class="search">
-    <div class="search-input">
-      <span class="search-icon">⌕</span>
-
-      <input
-        type="text"
-        [value]="searchQuery()"
-        (input)="searchQuery.set($any($event.target).value)"
-        placeholder="Search an anime..."
-      />
-    </div>
-  </div>
-
-  @if (searchResource.isLoading()) {
-    <p class="search-status">Searching...</p>
-  }
-
-  @if (searchResource.error()) {
-    <p class="search-status error">An error occurred.</p>
-  }
-
-  @if (searchQuery().trim() && !searchResource.isLoading()) {
-    <div class="search-results">
-      @for (anime of (searchResource.value() ?? []).slice(0, 5); track anime.mal_id) {
-        <button
-          type="button"
-          class="anime-result"
-          (click)="selectAnime(anime)"
-        >
-          <img
-            [src]="anime.images['jpg'].image_url"
-            [alt]="anime.title"
-          />
-
-          <div class="anime-result-info">
-            <span class="anime-result-title">{{ anime.title }}</span>
-
-            <span class="anime-result-meta">
-              @if (anime.year) {
-                {{ anime.year }}
-              }
-
-              @if (anime.type) {
-                · {{ anime.type }}
-              }
-            </span>
-          </div>
-        </button>
-      } @empty {
-        <p class="search-status">No anime found.</p>
-      }
-    </div>
-  }
-</div>
-
-@if (selectedAnime(); as anime) {
-  <div class="anime-selected">
+<button
+  type="button"
+  class="mobile-anime-slot"
+  (click)="openSearchModal()"
+>
+  @if (selectedAnime(); as anime) {
     <img
       [src]="anime.images['jpg'].large_image_url"
       [alt]="anime.title"
     />
 
-    <div class="anime-selected-info">
-      <span class="selected-label">Selected anime</span>
-      <h3>{{ anime.title }}</h3>
+    <div class="mobile-anime-info">
+      <strong>{{ anime.title }}</strong>
 
       @if (anime.year || anime.type) {
-        <span class="anime-selected-meta">
+        <span>
           @if (anime.year) {
             {{ anime.year }}
           }
@@ -80,6 +27,180 @@
           }
         </span>
       }
+    </div>
+  } @else {
+    <span class="mobile-anime-plus">+</span>
+    <span class="mobile-anime-placeholder">
+      Select anime
+    </span>
+  }
+</button>
+
+<div class="desktop-anime-selector">
+
+  <div class="search-container">
+    <div class="search">
+      <div class="search-input">
+        <span class="search-icon">⌕</span>
+
+        <input
+          type="text"
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+          placeholder="Search an anime..."
+        />
+      </div>
+    </div>
+
+    @if (searchResource.isLoading()) {
+      <p class="search-status">Searching...</p>
+    }
+
+    @if (searchResource.error()) {
+    <p class="search-status error">An error occurred.</p>
+    }
+
+  @if (searchQuery().trim() && !searchResource.isLoading()) {
+      <div class="search-results">
+      @for (anime of (searchResource.value() ?? []).slice(0, 25); track anime.mal_id) {
+          <button
+            type="button"
+            class="anime-result"
+            (click)="selectAnime(anime)"
+          >
+            <img
+              [src]="anime.images['jpg'].image_url"
+              [alt]="anime.title"
+            />
+
+            <div class="anime-result-info">
+            <span class="anime-result-title">{{ anime.title }}</span>
+
+              <span class="anime-result-meta">
+                @if (anime.year) {
+                  {{ anime.year }}
+                }
+
+                @if (anime.type) {
+                · {{ anime.type }}
+                }
+              </span>
+            </div>
+          </button>
+        } @empty {
+        <p class="search-status">No anime found.</p>
+        }
+      </div>
+    }
+  </div>
+
+  @if (selectedAnime(); as anime) {
+    <div class="anime-selected">
+        <img
+          [src]="anime.images['jpg'].large_image_url"
+          [alt]="anime.title"
+        />
+
+      <div class="anime-selected-info">
+      <span class="selected-label">Selected anime</span>
+      <h3>{{ anime.title }}</h3>
+
+        @if (anime.year || anime.type) {
+          <span class="anime-selected-meta">
+            @if (anime.year) {
+              {{ anime.year }}
+            }
+
+            @if (anime.year && anime.type) {
+              ·
+            }
+
+            @if (anime.type) {
+              {{ anime.type }}
+            }
+          </span>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+@if (searchModalOpen()) {
+  <div class="search-modal-backdrop" (click)="closeSearchModal()">
+    <div class="search-modal" (click)="$event.stopPropagation()" >
+      <div class="search-modal-header">
+        <strong> Select an anime </strong>
+        <button
+          type="button"
+          class="search-modal-close"
+          (click)="closeSearchModal()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="search-container">
+        <div class="search">
+          <div class="search-input">
+            <span class="search-icon">⌕</span>
+            <input
+              type="text"
+              [value]="searchQuery()"
+              (input)="searchQuery.set($any($event.target).value)"
+              placeholder="Search an anime..."
+              autofocus
+            />
+          </div>
+        </div>
+
+        @if (searchResource.isLoading()) {
+          <p class="search-status">Searching...</p>
+        }
+
+        @if (searchResource.error()) {
+          <p class="search-status error">An error occurred.</p>
+        }
+
+        @if (searchQuery().trim() && !searchResource.isLoading()) {
+          <div class="search-results">
+            @for (anime of (searchResource.value() ?? []).slice(0, 25);track anime.mal_id) {
+              <button
+                type="button"
+                class="anime-result"
+                (click)="selectAnime(anime)"
+              >
+                <img
+                  [src]="anime.images['jpg'].image_url"
+                  [alt]="anime.title"
+                />
+
+                <div class="anime-result-info">
+                  <span class="anime-result-title">
+                    {{ anime.title }}
+                  </span>
+
+                  <span class="anime-result-meta">
+
+                    @if (anime.year) {
+                      {{ anime.year }}
+                    }
+
+                    @if (anime.year && anime.type) {
+                      ·
+                    }
+
+                    @if (anime.type) {
+                      {{ anime.type }}
+                    }
+                  </span>
+                </div>
+              </button>
+            } @empty {
+              <p class="search-status">No anime found.</p>
+            }
+          </div>
+        }
+      </div>
     </div>
   </div>
 }

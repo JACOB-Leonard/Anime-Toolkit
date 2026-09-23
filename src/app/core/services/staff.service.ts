@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 export interface AnimeStaff {
   person: {
     mal_id: number;
+    url: string;
     name: string;
     images: {
       jpg: {

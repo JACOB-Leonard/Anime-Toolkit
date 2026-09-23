@@ -27,10 +27,21 @@ export class AnimeSelector {
   readonly charactersList = output<AnimeCharacter[]>();
   readonly staffList = output<AnimeStaff[]>();
 
+  readonly searchModalOpen = signal(false);
+
+  openSearchModal(): void {
+    this.searchModalOpen.set(true);
+  }
+
+  closeSearchModal(): void {
+    this.searchModalOpen.set(false);
+  }
+
   selectAnime(anime: Anime): void {
     this.selectedAnime.set(anime);
     this.animeSelected.emit(anime);
     this.searchQuery.set('');
+    this.closeSearchModal();
   }
 
   readonly debouncedQuery = toSignal(

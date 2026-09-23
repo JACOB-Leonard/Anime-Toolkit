@@ -11,7 +11,8 @@
 
   <section class="column center">
     <div class="selector-container">
-      @if(leftSelectedAnime() && rightSelectedAnime()) {
+      @if(leftSelectedAnime() && rightSelectedAnime() && availableLanguages().length > 0) {
+        <div class="selector-label">Common dubbing language</div>
         <select [ngModel]="selectedLanguage()"
                 (ngModelChange)="selectedLanguage.set($event)"
                 name="language">
@@ -33,14 +34,23 @@
     </div>
   </section>
 
-  @if(leftSelectedAnime() && rightSelectedAnime()) {
-    <app-voice-actor-comparison
-      [leftCharacters]="leftCharactersList()"
-      [rightCharacters]="rightCharactersList()"
-      [language]="selectedLanguage()"
-    />
-
-    <br/>
+  @if (leftSelectedAnime() && rightSelectedAnime()) {
+    @if (availableLanguages().length > 0) {
+      <app-voice-actor-comparison
+        [leftCharacters]="leftCharactersList()"
+        [rightCharacters]="rightCharactersList()"
+        [language]="selectedLanguage()"
+      />
+    } @else {
+      <div class="no-common">
+        <div class="no-common-content">
+          <strong>No common dubbing language</strong>
+          <span>
+            No common dubbing language found between the two selected animes.
+          </span>
+        </div>
+      </div>
+    }
 
     <app-staff-comparison
       [leftStaff]="leftStaffList()"
