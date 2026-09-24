@@ -10,6 +10,12 @@
   min-height: 100vh;
 }
 
+@media (max-width: 800px) {
+  .page-container {
+    max-width: 100%;
+  }
+}
+
 .status {
   display: flex;
   flex-direction: column;
@@ -26,7 +32,6 @@
   font-weight: bold;
 }
 
-/* Assure que le tier board prend tout l'espace restant */
 .tier-board-container {
   flex: 1;
 }

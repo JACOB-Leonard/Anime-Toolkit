@@ -38,14 +38,14 @@ export class AnimeCard {
       return undefined;
     }
 
-    let cleanUrl = embedUrl.replace('autoplay=1', 'autoplay=0');
+    let cleanUrl = embedUrl.replace('autoplay=0', 'autoplay=1');
 
     if (!cleanUrl.includes('autoplay=')) {
       const separator = cleanUrl.includes('?') ? '&' : '?';
-      cleanUrl += `${separator}autoplay=0`;
+      cleanUrl += `${separator}autoplay=1`;
     }
 
-    cleanUrl += '&rel=0&modestbranding=1';
+    cleanUrl += `&rel=0&modestbranding=1&vq=hd1080&cc_load_policy=1&cc_lang_pref=en'`;
 
     return this.sanitizer.bypassSecurityTrustResourceUrl(cleanUrl);
   });
@@ -62,11 +62,29 @@ export class AnimeCard {
   loadPictures(): void {
     this.loadingPictures.set(true);
 
+    const cover =
+      this.anime().images?.['jpg']?.large_image_url ??
+      this.anime().images?.['webp']?.large_image_url;
+
     this.picturesService
       .getPictures(this.anime().mal_id)
-      .subscribe(res => {
-        this.pictures.set(res.data.map(p => p.jpg.large_image_url));
-        this.loadingPictures.set(false);
+      .subscribe({
+        next: res => {
+          const pictures = res.data.map(
+            picture => picture.jpg.large_image_url
+          );
+
+          this.pictures.set([
+            ...(cover ? [cover] : []),
+            ...pictures.filter(image => image !== cover)
+          ]);
+
+          this.loadingPictures.set(false);
+        },
+        error: () => {
+          this.pictures.set(cover ? [cover] : []);
+          this.loadingPictures.set(false);
+        }
       });
   }
 
@@ -75,5 +93,15 @@ export class AnimeCard {
     this.anime().selectedImage = url;
   }
 
+  readonly trailerModalOpen = signal(false);
+
+  openTrailer(event: MouseEvent): void {
+    event.stopPropagation();
+    this.trailerModalOpen.set(true);
+  }
+
+  closeTrailer(): void {
+    this.trailerModalOpen.set(false);
+  }
 }
 

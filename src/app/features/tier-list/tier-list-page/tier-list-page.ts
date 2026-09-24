@@ -117,7 +117,7 @@ export class TierListPage {
       if (filters.length > 1) {
         const matchesFilter = filters.some(filter =>
           filter === 'special'
-            ? anime.type === 'TV Special'
+            ? anime.type === 'TV Special' || anime.type === 'Special'
             : anime.type === filter
         );
 
@@ -138,7 +138,10 @@ export class TierListPage {
   private regroupUnassigned() {
     const temp: Record<string, Anime[]> = {};
     for (const anime of this.animes) {
-      const type = anime.type || 'Other';
+      let type = anime.type || 'Other';
+      if (type === 'Special') {
+        type = 'TV Special';
+      }
       if (!temp[type]) temp[type] = [];
       temp[type].push(anime);
     }
@@ -150,5 +153,4 @@ export class TierListPage {
       }
     }
   }
-
 }

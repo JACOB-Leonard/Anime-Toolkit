@@ -2,8 +2,8 @@
   <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
 
   <div class="status">
-    <p>Pages loaded: {{ currentPage() }} / {{ totalPages() }}</p>
     @if(loading()){
+      <p>Pages loaded: {{ currentPage() }} / {{ totalPages() }}</p>
       <p class="loading">🔄 Loading results…</p>
     }
     @if(!loading() && noResults()){

@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
 
   toggleDark() {
-    document.body.classList.toggle('dark');
+    document.documentElement.classList.toggle('dark');
 
     localStorage.setItem(
       'theme',
-      document.body.classList.contains('dark') ? 'dark' : 'light'
+      document.documentElement.classList.contains('dark') ? 'dark' : 'light'
     );
   }
 
@@ -16,14 +16,14 @@ export class ThemeService {
     const saved = localStorage.getItem('theme');
 
     if (saved) {
-      document.body.classList.toggle('dark', saved === 'dark');
+      document.documentElement.classList.toggle('dark', saved === 'dark');
     } 
     else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
     }
   }
 
   isDark(): boolean {
-    return document.body.classList.contains('dark');
+    return document.documentElement.classList.contains('dark');
   }
 }

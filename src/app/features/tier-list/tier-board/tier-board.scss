@@ -130,6 +130,12 @@
   padding: 16px;
 }
 
+@media (max-width: 800px) {
+  .export-area {
+    padding: 0px;
+  }
+}
+
 .export-bar {
   display: flex;
   justify-content: center;

@@ -12,13 +12,25 @@
   <div class="overlay" (click)="showModal.set(false)" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
     <div class="modal" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
 
+      <button
+        type="button"
+        class="modal-close"
+        (click)="showModal.set(false)"
+        aria-label="Close"
+      >
+        ×
+      </button>
       <div class="left">
         <div class="main-image-container">
-          <img
-            class="main-image"
-            [src]="currentImage()"
-            alt="{{ anime().title }} - cover"
-          />
+          <a
+            [href]="anime().url"
+            target="_blank">
+            <img
+              class="main-image"
+              [src]="currentImage()"
+              alt="{{ anime().title }} - cover"
+            />
+          </a>
         </div>
         <div class="thumbnails">
           @for(img of pictures(); track img) {
@@ -138,14 +150,52 @@
 
       @if(safeTrailerUrl()){
         <div class="right">
-          <div class="video-wrapper">
-            <iframe
-              [src]="safeTrailerUrl()"
-              allowfullscreen>
-            </iframe>
-          </div>
+          <button
+            type="button"
+            class="trailer-preview"
+            (click)="openTrailer($event)"
+          >
+            <img
+              [src]="anime().trailer?.['images']?.['large_image_url']"
+              [alt]="anime().title + ' trailer'"
+            />
+            <span class="trailer-title">
+              {{ anime().trailer?.['title'] }}
+            </span>
+            <span class="play-button">▶</span>
+          </button>
         </div>
       }
+    </div>
+  </div>
+}
+
+@if(trailerModalOpen() && safeTrailerUrl()){
+  <div
+    class="trailer-overlay"
+    (click)="closeTrailer()"
+  >
+    <div
+      class="trailer-modal"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        class="trailer-close"
+        (click)="closeTrailer()"
+        aria-label="Close trailer"
+      >
+        ×
+      </button>
+
+      <div class="trailer-video-wrapper">
+        <iframe
+          [src]="safeTrailerUrl()"
+          title="{{ anime().title }} trailer"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
   </div>
 }

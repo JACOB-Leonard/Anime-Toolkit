@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {from, map, mergeMap, Observable, timer, toArray} from 'rxjs';
-import { Anime } from '../models/anime.model';
+import {from, Observable, timer, toArray, map, mergeMap} from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Anime } from '../models/anime.model';
 import { AnimeResponse } from '../models/animeResponse.model';
 
 @Injectable({ providedIn: 'root' })
@@ -19,10 +19,16 @@ export class AnimeService {
   ): Observable<AnimeResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('sfw', 'false')
-      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','));
 
-    return this.http.get<AnimeResponse>(`${this.BASE_URL}/seasons/${year}/${season.toLowerCase()}`, { params });
+    return this.http.get<AnimeResponse>(`${this.BASE_URL}/seasons/${year}/${season.toLowerCase()}`, { params })
+    .pipe(
+      map(response => ({
+        ...response,
+        data: response.data.filter(
+          anime => !anime.rating?.startsWith('Rx')
+        )
+      }))
+    );
   }
 
   getSeasonByType(
@@ -33,13 +39,19 @@ export class AnimeService {
   ): Observable<AnimeResponse> {
     const params = new HttpParams()
       .set('page', page)
-      .set('sfw', 'false')
-      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','))
       .set('filter', type);
 
     return this.http.get<AnimeResponse>(
       `${this.BASE_URL}/seasons/${year}/${season}`,
       { params }
+    )
+    .pipe(
+      map(response => ({
+        ...response,
+        data: response.data.filter(
+          anime => !anime.rating?.startsWith('Rx')
+        )
+      }))
     );
   }
 
@@ -100,15 +112,14 @@ export class AnimeService {
   ): Observable<Anime[]> {
     let params = new HttpParams()
       .set('q', query)
-      .set('sfw', 'false')
-      .set('rating',['g', 'pg', 'pg13', 'r17', 'r'].join(','))
-      .set('order_by', 'popularity');
 
     return this.http.get<AnimeResponse>(
       `${this.BASE_URL}/anime`,
       { params }
     ).pipe(
-      map(response => response.data)
+      map(response => response.data.filter(
+        anime => !anime.rating?.startsWith('Rx')
+      ))
     );
   }
 

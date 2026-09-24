@@ -70,3 +70,31 @@
     background: var(--btn-hover);
   }
 }
+
+@media (max-width: 800px) {
+  .search-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .field {
+    width: 100%;
+  }
+
+  .field select,
+  .field input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .filters {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .search-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
