@@ -2,9 +2,12 @@
   <section class="column left">
     <div class="selector-container">
       <app-anime-selector
-        (animeSelected)="leftSelectedAnime.set($event)"
+        [initialAnime]="leftSelectedAnime()"
+        (animeSelected)="selectLeftAnime($event)"
         (charactersList)="leftCharactersList.set($event)"
         (staffList)="leftStaffList.set($event)"
+        (charactersLoading)="leftCharactersLoading.set($event)"
+        (staffLoading)="leftStaffLoading.set($event)"
       />
     </div>
   </section>
@@ -14,7 +17,7 @@
       @if(leftSelectedAnime() && rightSelectedAnime() && availableLanguages().length > 0) {
         <div class="selector-label">Common dubbing language</div>
         <select [ngModel]="selectedLanguage()"
-                (ngModelChange)="selectedLanguage.set($event)"
+                (ngModelChange)="selectLanguage($event)"
                 name="language">
           @for (language of availableLanguages(); track language) {
             <option [value]="language">{{ language }}</option>
@@ -27,35 +30,49 @@
   <section class="column right">
     <div class="selector-container">
       <app-anime-selector
+        [initialAnime]="rightSelectedAnime()"
         (animeSelected)="rightSelectedAnime.set($event)"
+        (animeSelected)="selectRightAnime($event)"
         (charactersList)="rightCharactersList.set($event)"
         (staffList)="rightStaffList.set($event)"
+        (charactersLoading)="rightCharactersLoading.set($event)"
+        (staffLoading)="rightStaffLoading.set($event)"
       />
     </div>
   </section>
 
   @if (leftSelectedAnime() && rightSelectedAnime()) {
-    @if (availableLanguages().length > 0) {
-      <app-voice-actor-comparison
-        [leftCharacters]="leftCharactersList()"
-        [rightCharacters]="rightCharactersList()"
-        [language]="selectedLanguage()"
-      />
-    } @else {
+    @if(comparisonLoading()) {
       <div class="no-common">
-        <div class="no-common-content">
-          <strong>No common dubbing language</strong>
-          <span>
-            No common dubbing language found between the two selected animes.
-          </span>
+          <div class="no-common-content">
+            <strong>Loading...</strong>
+            <span>
+              Please wait while we load the comparison data for the selected animes.
+            </span>
+          </div>
         </div>
-      </div>
+    } @else {
+      @if (availableLanguages().length > 0) {
+        <app-voice-actor-comparison
+          [leftCharacters]="leftCharactersList()"
+          [rightCharacters]="rightCharactersList()"
+          [language]="selectedLanguage()"
+        />
+      } @else {
+        <div class="no-common">
+          <div class="no-common-content">
+            <strong>No common dubbing language</strong>
+            <span>
+              No common dubbing language found between the two selected animes.
+            </span>
+          </div>
+        </div>
+      }
+
+      <app-staff-comparison
+        [leftStaff]="leftStaffList()"
+        [rightStaff]="rightStaffList()"
+      />
     }
-
-    <app-staff-comparison
-      [leftStaff]="leftStaffList()"
-      [rightStaff]="rightStaffList()"
-    />
   }
-
 </main>

@@ -10,7 +10,7 @@ export interface AnimeCharacter {
     url: string;
     name: string;
     images: {
-      jpg: {
+      webp: {
         image_url: string;
       };
     };

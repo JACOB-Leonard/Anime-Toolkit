@@ -123,4 +123,9 @@ export class AnimeService {
     );
   }
 
+  getAnimeById(id: number): Observable<Anime> {
+    return this.http.get<{ data: Anime }>(`${this.BASE_URL}/anime/${id}`)
+    .pipe(map(response => response.data));
+  }
+
 }

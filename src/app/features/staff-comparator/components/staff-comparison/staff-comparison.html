@@ -33,6 +33,8 @@
               <img
                 [src]="item.staff.images.jpg.image_url"
                 [alt]="item.staff.name"
+                loading="lazy"
+                decoding="async"
               >
             </a>
             <span>{{ item.staff.name }}</span>
