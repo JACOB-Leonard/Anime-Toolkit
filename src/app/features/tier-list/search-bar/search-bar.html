@@ -21,7 +21,7 @@
         (ngModelChange)="year.set($event)"
         name="year"
         min="1917"
-        max="2100"
+        [max]="maxYear"
       />
     </div>
 

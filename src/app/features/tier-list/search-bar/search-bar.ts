@@ -1,4 +1,4 @@
-import { Component, computed, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -11,6 +11,7 @@ export class SearchBar {
   
   readonly season = signal(this.getCurrentSeason());
   readonly year = signal(new Date().getFullYear());
+  readonly maxYear = new Date().getFullYear() + 1;
 
   readonly animeTypes = signal([
     { label: 'TV', value: 'TV', checked: true },
@@ -25,14 +26,31 @@ export class SearchBar {
     this.animeTypes().every(type => type.checked)
   );
 
+  readonly initialSearch = input<{ season: string; year: number; filters: string[] }>();
   readonly search = output<{ season: string; year: number; filters: string[] }>();
 
-  getCurrentSeason(): string {
+  ngOnInit(): void {
+    const search = this.initialSearch();
+
+    if (!search) return;
+
+    this.season.set(search.season);
+    this.year.set(search.year);
+
+    this.animeTypes.update(types =>
+      types.map(type => ({
+        ...type,
+        checked: search.filters.includes(type.value)
+      }))
+    );
+  }
+
+  private getCurrentSeason(): string {
     const month = new Date().getMonth() + 1;
 
-    if (month >= 1 && month <= 3) return 'winter';
-    if (month >= 4 && month <= 6) return 'spring';
-    if (month >= 7 && month <= 9) return 'summer';
+    if (month <= 3) return 'winter';
+    if (month <= 6) return 'spring';
+    if (month <= 9) return 'summer';
     return 'fall';
   }
 

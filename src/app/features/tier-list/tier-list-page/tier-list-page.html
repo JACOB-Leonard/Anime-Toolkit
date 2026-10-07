@@ -1,5 +1,9 @@
 <div class="page-container">
-  <app-search-bar (search)="onSearch($event.season, $event.year, $event.filters)" class="search-bar"></app-search-bar>
+  <app-search-bar
+    [initialSearch]="searchState()"
+    (search)="onSearch($event.season, $event.year, $event.filters)"
+    class="search-bar"
+  />
 
   <div class="status">
     @if(loading()){
