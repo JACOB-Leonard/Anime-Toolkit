@@ -3,6 +3,8 @@
     <div class="selector-container">
       <app-anime-selector
         [initialAnime]="leftSelectedAnime()"
+        [loadCharacters]="true"
+        [loadStaff]="true"
         (animeSelected)="selectLeftAnime($event)"
         (charactersList)="leftCharactersList.set($event)"
         (staffList)="leftStaffList.set($event)"
@@ -31,7 +33,8 @@
     <div class="selector-container">
       <app-anime-selector
         [initialAnime]="rightSelectedAnime()"
-        (animeSelected)="rightSelectedAnime.set($event)"
+        [loadCharacters]="true"
+        [loadStaff]="true"
         (animeSelected)="selectRightAnime($event)"
         (charactersList)="rightCharactersList.set($event)"
         (staffList)="rightStaffList.set($event)"

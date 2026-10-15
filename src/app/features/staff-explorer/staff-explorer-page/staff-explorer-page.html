@@ -1,0 +1,18 @@
+<main class="comparator">
+  <section class="column">
+    <div class="selector-container">
+      <app-anime-selector
+        [initialAnime]="selectedAnime()"
+        (animeSelected)="selectAnime($event)"
+        (charactersLoading)="charactersLoading.set($event)"
+        (staffLoading)="staffLoading.set($event)"
+      />
+    </div>
+  </section>
+
+  <app-voice-actor-explorer
+    [anime]="selectedAnime()"
+    [initialLanguage]="selectedLanguage()"
+    (languageOutput)="onLanguageChange($event)"
+  />
+</main>

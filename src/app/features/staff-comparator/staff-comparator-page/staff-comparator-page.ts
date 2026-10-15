@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
-import { AnimeSelector } from '../components/anime-selector/anime-selector';
+import { AnimeSelector } from '../../../shared/anime-selector/anime-selector';
 import { Anime } from '../../../core/models/anime.model';
 import { AnimeCharacter } from '../../../core/services/character.service';
 import { FormsModule } from '@angular/forms';

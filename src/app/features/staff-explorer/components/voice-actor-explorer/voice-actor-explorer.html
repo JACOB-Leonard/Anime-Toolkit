@@ -1,0 +1,141 @@
+<div class="voice-actor-explorer">
+  <section class="comparison-panel">
+    <header class="panel-header">
+      <h2>Voice Actors</h2>
+
+      <div class="header-actions">
+        @if (selectedLanguage() && availableLanguages().length > 1) {
+          <select
+            aria-label="Voice actor language"
+            [ngModel]="selectedLanguage()"
+            (ngModelChange)="onLanguageChange($event)"
+            >
+
+            @for (language of availableLanguages(); track language) {
+              <option [ngValue]="language">{{ language }}</option>
+            }
+          </select>
+        }
+        @if (filteredCharacterVoiceActors().length > 0) {
+          <span class="actor-count">{{ filteredCharacterVoiceActors().length }}</span>
+        }
+      </div>
+    </header>
+
+    @if (loadingCharacters()) {
+      <div class="loading">Loading...</div>
+    } @else if (anime() && filteredCharacterVoiceActors().length === 0) {
+      <div class="empty">No voice actors found for this language</div>
+    } @else {
+      <div class="comparison-list">
+        @for (
+          item of filteredCharacterVoiceActors();
+          track item.voiceActor.id
+        ) {
+          <article
+            class="comparison-row"
+            [class.selected]="selectedVoiceActorId() === item.voiceActor.id"
+          >
+            <button
+              type="button"
+              class="voice-actor-cell"
+              [class.selected]="selectedVoiceActorId() === item.voiceActor.id"
+              (click)="selectVoiceActor(item.voiceActor)"
+            >
+              @if (item.voiceActor.image?.medium; as image) {
+                <img [src]="image" [alt]="item.voiceActor.name.full" />
+              }
+
+              <div>
+                <strong>{{ item.voiceActor.name.full }}</strong>
+              </div>
+            </button>
+
+            <div class="character-cell">
+              @for (
+                character of item.characters;
+                track character.character.id
+              ) {
+                <div class="character-item">
+                  @if (character.character.image?.medium; as image) {
+                    <img
+                      class="character-image"
+                      [src]="image"
+                      [alt]="character.character.name.full"
+                    />
+                  }
+
+                  <div>
+                    <strong>{{ character.character.name.full }}</strong>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="results-cell">
+              @if (voiceActorData().get(item.voiceActor.id); as data) {
+                @if (data.loading) {
+                  <div class="loading">Loading...</div>
+                } @else {
+                  <div class="results-columns">
+                    <div class="result-section">
+                      <header><h3>Popular</h3></header>
+
+                      <div class="result-list">
+                        @for (character of data.popular; track character.id) {
+                          <article class="result-card">
+                            @if (character.image.medium; as image) {
+                              <img [src]="image" [alt]="character.name.full" />
+                            }
+
+                            <div>
+                              <strong>{{ character.name.full }}</strong>
+                              @if (character.media.nodes[0]; as anime) {
+                                <span>{{ anime.title.english || anime.title.romaji }}</span>
+                              }
+                            </div>
+                          </article>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="result-section">
+                      <header><h3>Recent</h3></header>
+
+                      <div class="result-list">
+                        @for (result of data.recent; track result.character.id) {
+                          <article class="result-card">
+                            @if (result.character.image.medium; as image) {
+                              <img [src]="image" [alt]="result.character.name.full" />
+                            }
+
+                            <div>
+                              <strong>{{ result.character.name.full }}</strong>
+                              <span>
+                                {{ result.anime.title.english || result.anime.title.romaji }}
+                              </span>
+                            </div>
+                          </article>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </article>
+        }
+      
+      @if (hasNextPage()) {
+        <button class="load-more-btn"
+          type="button"
+          [disabled]="loadingMore()"
+          (click)="loadMoreCharacters()"
+        >
+          {{ loadingMore() ? 'Loading…' : 'Load more' }}
+        </button>
+      } 
+      </div>
+    }
+  </section>
+</div>

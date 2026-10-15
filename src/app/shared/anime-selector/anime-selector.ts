@@ -1,11 +1,11 @@
-import { Component, effect, inject, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, of } from 'rxjs';
 
-import { AnimeService } from '../../../../core/services/anime';
-import { Anime } from '../../../../core/models/anime.model';
-import { AnimeCharacter, CharacterService } from '../../../../core/services/character.service';
-import { AnimeStaff, StaffService } from '../../../../core/services/staff.service';
+import { AnimeService } from '../../core/services/anime';
+import { Anime } from '../../core/models/anime.model';
+import { AnimeCharacter, CharacterService } from '../../core/services/character.service';
+import { AnimeStaff, StaffService } from '../../core/services/staff.service';
 
 @Component({
   selector: 'app-anime-selector',
@@ -19,6 +19,9 @@ export class AnimeSelector {
   private readonly characterService = inject(CharacterService);
   private readonly staffService = inject(StaffService);
 
+  readonly initialAnime = input<Anime | null>(null);
+  readonly loadCharacters = input(false);
+  readonly loadStaff = input(false);
 
   readonly searchQuery = signal('');
   readonly selectedAnime = signal<Anime | null>(null);
@@ -28,6 +31,9 @@ export class AnimeSelector {
   readonly staffList = output<AnimeStaff[]>();
 
   readonly searchModalOpen = signal(false);
+
+  readonly charactersLoading = output<boolean>();
+  readonly staffLoading = output<boolean>();
 
   openSearchModal(): void {
     this.searchModalOpen.set(true);
@@ -68,7 +74,7 @@ export class AnimeSelector {
 
   readonly charactersResource = rxResource({
     params: () => ({
-      animeId: this.selectedAnime()?.mal_id ?? null
+      animeId: this.loadCharacters() ? this.selectedAnime()?.mal_id ?? null : null
     }),
 
     stream: ({ params }) => {
@@ -82,7 +88,7 @@ export class AnimeSelector {
 
   readonly staffResource = rxResource({
     params: () => ({
-      animeId: this.selectedAnime()?.mal_id ?? null
+      animeId: this.loadStaff() ? this.selectedAnime()?.mal_id ?? null : null
     }),
 
     stream: ({ params }) => {
@@ -96,15 +102,18 @@ export class AnimeSelector {
   
   constructor() {
     effect(() => {
+      const charactersLoading = this.charactersResource.isLoading();
+      const staffLoading = this.staffResource.isLoading();
       const characters = this.charactersResource.value();
       const staff = this.staffResource.value();
+      const anime = this.initialAnime();
 
-      if (characters) {
-        this.charactersList.emit(characters);
-      }
-      if (staff) {
-        this.staffList.emit(staff);
-      }
+      this.charactersLoading.emit(charactersLoading);
+      this.staffLoading.emit(staffLoading);
+
+      if (characters) this.charactersList.emit(characters);
+      if (staff) this.staffList.emit(staff);
+      if (anime) this.selectedAnime.set(anime);
     });
   }
 
